@@ -1,3 +1,5 @@
+const publicAsset = (path) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
+
 export const tournamentOptions = [
   { label: 'FIFA World Cup 2026', value: 'world-cup-2026', disabled: false },
   {
@@ -125,6 +127,12 @@ export const groups = [
     ]
   }
 ];
+
+groups.forEach((group) => {
+  group.teams.forEach((team) => {
+    team.flag = publicAsset(team.flag);
+  });
+});
 
 const teamByName = groups
   .flatMap((group) => group.teams)

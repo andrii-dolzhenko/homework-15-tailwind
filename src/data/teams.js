@@ -1,3 +1,5 @@
+const publicAsset = (path) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
+
 export const teams = [
   {
     id: 'france',
@@ -84,3 +86,7 @@ export const teams = [
     rating: 83
   }
 ];
+
+teams.forEach((team) => {
+  team.flag = publicAsset(team.flag);
+});

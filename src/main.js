@@ -7,6 +7,7 @@ import iliaAvatar from './assets/icons/ilia.png';
 import yuriiAvatar from './assets/icons/yurii.png';
 
 const app = document.querySelector('#app');
+const publicAsset = (path) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
 
 const state = {
   theme: localStorage.getItem('theme') || 'dark',
@@ -81,8 +82,10 @@ const getTheme = () => {
     mutedText: isDark ? 'text-slate-300' : 'text-slate-500',
     strongText: isDark ? 'text-white' : 'text-slate-950',
     footer: isDark ? 'border-slate-700/80 bg-[#111827]' : 'border-slate-200 bg-white',
-    logo: '/logo.png',
-    stadium: isDark ? '/img/stadium/stadium-dark.webp' : '/img/stadium/stadium-light.webp',
+    logo: publicAsset('logo.png'),
+    stadium: publicAsset(
+      isDark ? 'img/stadium/stadium-dark.webp' : 'img/stadium/stadium-light.webp'
+    ),
     playerOpacity: isDark ? 'opacity-90' : 'opacity-95',
     playerImageFx: isDark
       ? 'brightness-105 contrast-105 saturate-105'
@@ -261,7 +264,7 @@ const renderDecorativePlayers = (theme) => `
     <div class="fixed left-0 top-0 z-0 h-full w-[400px] ${theme.playerGlowLeft}"></div>
 
     <img
-      src="/player-right-blue.webp"
+      src="${publicAsset('player-right-blue.webp')}"
       alt=""
       class="fixed left-8 top-24 z-10 h-[calc(100vh-8rem)] max-h-[800px] object-contain object-left-bottom ${theme.playerImageFx} ${theme.playerOpacity}"
     >
@@ -269,7 +272,7 @@ const renderDecorativePlayers = (theme) => `
     <div class="fixed right-0 top-0 z-0 h-full w-[400px] ${theme.playerGlowRight}"></div>
 
     <img
-      src="/player-left-yellow.webp"
+      src="${publicAsset('player-left-yellow.webp')}"
       alt=""
       class="fixed right-8 top-24 z-10 h-[calc(100vh-8rem)] max-h-[800px] object-contain object-right-bottom ${theme.playerImageFx} ${theme.playerOpacity}"
     >
@@ -1816,7 +1819,7 @@ const renderAuthModal = (theme) => {
                 data-modal-close
                 aria-label="Continue with Google"
               >
-                <img src="/img/icons/google.svg" alt="" class="h-6 w-6">
+                <img src="${publicAsset('img/icons/google.svg')}" alt="" class="h-6 w-6">
               </button>
             </div>
           </div>
