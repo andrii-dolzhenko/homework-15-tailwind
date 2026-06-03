@@ -1000,55 +1000,66 @@ const renderStandings = (theme) => {
         </div>
       </div>
 
-      <table class="w-full table-auto text-left text-xs sm:text-sm">
-        <thead class="border-b ${theme.isDark ? 'border-slate-700' : 'border-slate-200'} ${theme.mutedText}">
-          <tr>
-            <th class="px-2 py-3 font-semibold">#</th>
-            <th class="px-2 py-3 font-semibold">Team</th>
-            <th class="px-2 py-3 text-center font-semibold">P</th>
-            <th class="px-2 py-3 text-center font-semibold">W</th>
-            <th class="px-2 py-3 text-center font-semibold">D</th>
-            <th class="px-2 py-3 text-center font-semibold">L</th>
-            <th class="hidden px-2 py-3 text-center font-semibold sm:table-cell">GD</th>
-            <th class="px-2 py-3 text-center font-semibold">Pts</th>
+ <table class="w-full table-fixed text-left text-xs sm:text-sm">
+  <colgroup>
+    <col class="w-10 sm:w-12">
+    <col>
+    <col class="w-10 sm:w-12">
+    <col class="w-10 sm:w-12">
+    <col class="w-10 sm:w-12">
+    <col class="w-10 sm:w-12">
+    <col class="hidden sm:table-column sm:w-12">
+    <col class="w-12 sm:w-14">
+  </colgroup>
+
+  <thead class="border-b ${theme.isDark ? 'border-slate-700' : 'border-slate-200'} ${theme.mutedText}">
+    <tr>
+      <th class="px-2 py-3 font-semibold">#</th>
+      <th class="px-2 py-3 font-semibold">Team</th>
+      <th class="px-2 py-3 text-center font-semibold">P</th>
+      <th class="px-2 py-3 text-center font-semibold">W</th>
+      <th class="px-2 py-3 text-center font-semibold">D</th>
+      <th class="px-2 py-3 text-center font-semibold">L</th>
+      <th class="hidden px-2 py-3 text-center font-semibold sm:table-cell">GD</th>
+      <th class="px-2 py-3 text-center font-semibold">Pts</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    ${standingsRows
+      .map(
+        (team) => `
+          <tr class="border-b ${theme.isDark ? 'border-slate-700/70' : 'border-slate-200/80'}">
+            <td class="px-2 py-3 ${theme.mutedText}">
+              ${team.position}
+            </td>
+
+            <td class="px-2 py-3">
+              <div class="grid min-w-0 grid-cols-[24px_minmax(0,1fr)] items-center gap-2 sm:grid-cols-[28px_minmax(0,1fr)]">
+                <img
+                  src="${team.flag}"
+                  alt="${team.name} flag"
+                  class="h-6 w-6 rounded-full object-cover sm:h-7 sm:w-7"
+                >
+
+                <span class="min-w-0 truncate font-semibold leading-tight ${theme.strongText}" title="${team.name}">
+                  ${team.name}
+                </span>
+              </div>
+            </td>
+
+            <td class="px-2 py-3 text-center">${team.played}</td>
+            <td class="px-2 py-3 text-center">${team.won}</td>
+            <td class="px-2 py-3 text-center">${team.drawn}</td>
+            <td class="px-2 py-3 text-center">${team.lost}</td>
+            <td class="hidden px-2 py-3 text-center sm:table-cell">${team.goalDifference}</td>
+            <td class="px-2 py-3 text-center font-bold text-violet-400">${team.points}</td>
           </tr>
-        </thead>
-
-        <tbody>
-          ${standingsRows
-            .map(
-              (team) => `
-                <tr class="border-b ${theme.isDark ? 'border-slate-700/70' : 'border-slate-200/80'}">
-                  <td class="px-2 py-3 ${theme.mutedText}">
-                    ${team.position}
-                  </td>
-
-                  <td class="px-2 py-3">
-                    <div class="grid min-w-0 grid-cols-[24px_minmax(0,1fr)] items-center gap-2">
-                      <img
-                        src="${team.flag}"
-                        alt="${team.name} flag"
-                        class="h-6 w-6 rounded-full object-cover"
-                      >
-
-                      <span class="min-w-0 break-words font-semibold leading-tight ${theme.strongText}">
-                        ${team.name}
-                      </span>
-                    </div>
-                  </td>
-
-                  <td class="px-2 py-3 text-center">${team.played}</td>
-                  <td class="px-2 py-3 text-center">${team.won}</td>
-                  <td class="px-2 py-3 text-center">${team.drawn}</td>
-                  <td class="px-2 py-3 text-center">${team.lost}</td>
-                  <td class="hidden px-2 py-3 text-center sm:table-cell">${team.goalDifference}</td>
-                  <td class="px-2 py-3 text-center font-bold text-violet-400">${team.points}</td>
-                </tr>
-              `
-            )
-            .join('')}
-        </tbody>
-      </table>
+        `
+      )
+      .join('')}
+  </tbody>
+</table>
 
       <div class="mt-5 flex flex-wrap justify-center gap-1.5" aria-label="Standings groups pagination">
         ${groups
