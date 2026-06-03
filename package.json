@@ -6,9 +6,14 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "check:js": "node --check src/main.js && node --check src/data/matches.js"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.4.1",
     "vite": "^8.0.12"
   },
   "dependencies": {
