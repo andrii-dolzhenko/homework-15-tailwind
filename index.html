@@ -1,747 +1,554 @@
 <!doctype html>
 <html lang="uk">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MatchForecast — Predict. Analyze. Win.</title>
-    <script>
-      document.documentElement.dataset.theme = localStorage.getItem('theme') || 'dark';
-    </script>
-    <style>
-      html:not(.app-ready),
-      html:not(.app-ready) body {
-        background: #0b1220;
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MatchForecast — Predict. Analyze. Win.</title>
+  <script>
+    document.documentElement.dataset.theme = localStorage.getItem('theme') || 'dark';
+  </script>
+  <style>
+    html:not(.app-ready),
+    html:not(.app-ready) body {
+      background: #0b1220;
+    }
+
+    html:not(.app-ready) #app {
+      min-height: 100vh;
+      opacity: 0;
+      background: #0b1220;
+    }
+
+    #app {
+      min-height: 100vh;
+    }
+
+    #decorative-players {
+      display: none;
+    }
+
+    html.app-ready #app {
+      opacity: 1;
+    }
+
+    html:not(.app-ready)[data-theme='dark'] #site-header {
+      border-color: rgba(51, 65, 85, 0.8);
+      background: rgba(17, 24, 39, 0.9);
+      color: #f8fafc;
+    }
+
+    html:not(.app-ready)[data-theme='light'] #site-header {
+      border-color: #e2e8f0;
+      background: rgba(255, 255, 255, 0.9);
+      color: #020617;
+    }
+
+    html:not(.app-ready)[data-theme='dark'] [data-header-nav-link] {
+      color: #cbd5e1;
+    }
+
+    html:not(.app-ready)[data-theme='light'] [data-header-nav-link] {
+      color: #64748b;
+    }
+
+    html:not(.app-ready) [data-header-nav-link='rules'],
+    html:not(.app-ready) [data-page-link='rules'] {
+      color: #c4b5fd;
+    }
+
+    html:not(.app-ready)[data-theme='dark'] #theme-toggle-button,
+    html:not(.app-ready)[data-theme='dark'] #header-login-button,
+    html:not(.app-ready)[data-theme='dark'] #mobile-menu-open-button {
+      border-color: #475569;
+      background: #1e293b;
+      color: #ffffff;
+    }
+
+    html:not(.app-ready)[data-theme='light'] #theme-toggle-button,
+    html:not(.app-ready)[data-theme='light'] #header-login-button,
+    html:not(.app-ready)[data-theme='light'] #mobile-menu-open-button {
+      border-color: #e2e8f0;
+      background: #ffffff;
+      color: #0f172a;
+    }
+
+    html:not(.app-ready) [data-modal-open='register'] {
+      background: #7c3aed;
+      color: #ffffff;
+    }
+
+    html:not(.app-ready) #site-footer {
+      border-color: #e2e8f0;
+      background: #ffffff;
+    }
+
+    html:not(.app-ready)[data-theme='dark'] #site-footer {
+      border-color: rgba(51, 65, 85, 0.8);
+      background: #111827;
+    }
+
+    html:not(.app-ready) #site-footer a {
+      color: #c4b5fd;
+    }
+
+    @media (min-width: 1920px) {
+      html.app-ready #decorative-players {
+        display: block;
       }
+    }
+  </style>
+</head>
 
-      html:not(.app-ready) #app {
-        min-height: 100vh;
-        opacity: 0;
-        background: #0b1220;
-      }
+<body>
+  <!-- App -->
+  <div id="app"
+    class="flex min-h-screen flex-col bg-[#0b1220] text-slate-100 opacity-0 transition-opacity duration-150">
+    <!-- Decorative players for wide screens -->
+    <div id="decorative-players"
+      class="pointer-events-none fixed inset-y-0 left-0 right-0 z-0 hidden overflow-hidden min-[1920px]:block"
+      aria-hidden="true">
+      <div id="player-left-glow" class="fixed left-0 top-0 z-0 h-full w-[400px]"></div>
 
-      #app {
-        min-height: 100vh;
-      }
+      <img id="player-left-image" src="/player-right-blue.webp" alt=""
+        class="fixed left-8 top-24 z-10 h-[calc(100vh-8rem)] max-h-[800px] object-contain object-left-bottom">
 
-      #decorative-players {
-        display: none;
-      }
+      <div id="player-right-glow" class="fixed right-0 top-0 z-0 h-full w-[400px]"></div>
 
-      html.app-ready #app {
-        opacity: 1;
-      }
+      <img id="player-right-image" src="/player-left-yellow.webp" alt=""
+        class="fixed right-8 top-24 z-10 h-[calc(100vh-8rem)] max-h-[800px] object-contain object-right-bottom">
+    </div>
 
-      html:not(.app-ready)[data-theme='dark'] #site-header {
-        border-color: rgba(51, 65, 85, 0.8);
-        background: rgba(17, 24, 39, 0.9);
-        color: #f8fafc;
-      }
+    <!-- Header -->
+    <header id="site-header" class="sticky top-0 z-50 border-b backdrop-blur-xl">
+      <div class="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
+        <a class="inline-flex max-w-[160px] items-center focus-visible:outline-2 focus-visible:outline-violet-400 sm:max-w-none"
+          href="#" data-page-link="predictions" aria-label="MatchForecast home">
+          <img id="header-logo" src="/logo.png" alt="MatchForecast logo" class="h-11 w-auto sm:h-12 lg:h-14">
+        </a>
 
-      html:not(.app-ready)[data-theme='light'] #site-header {
-        border-color: #e2e8f0;
-        background: rgba(255, 255, 255, 0.9);
-        color: #020617;
-      }
+        <nav class="hidden items-center gap-7 text-sm font-semibold lg:flex" aria-label="Main navigation">
+          <a href="#" data-page-link="predictions" data-header-nav-link="predictions">Predictions</a>
+          <a href="#" data-page-link="calendar" data-header-nav-link="calendar">Calendar</a>
+          <a href="#" data-page-link="ratings" data-header-nav-link="ratings">Ratings</a>
+          <a href="#" data-page-link="rules" data-header-nav-link="rules">Rules</a>
+        </nav>
 
-      html:not(.app-ready)[data-theme='dark'] [data-header-nav-link] {
-        color: #cbd5e1;
-      }
+        <div class="flex items-center gap-2">
+          <button id="theme-toggle-button"
+            class="inline-flex min-h-10 min-w-10 items-center justify-center rounded-xl border text-sm font-semibold transition sm:min-h-11 sm:min-w-11 hover:border-violet-400 focus-visible:outline-2 focus-visible:outline-violet-400"
+            type="button" data-theme-toggle aria-label="Switch theme">
+            ☾
+          </button>
 
-      html:not(.app-ready)[data-theme='light'] [data-header-nav-link] {
-        color: #64748b;
-      }
+          <button id="header-login-button"
+            class="hidden min-h-11 items-center justify-center rounded-xl border px-5 text-sm font-bold transition sm:inline-flex hover:border-violet-400 focus-visible:outline-2 focus-visible:outline-violet-400"
+            type="button" data-modal-open="login">
+            Login
+          </button>
 
-      html:not(.app-ready) [data-header-nav-link='rules'],
-      html:not(.app-ready) [data-page-link='rules'] {
-        color: #c4b5fd;
-      }
+          <button
+            class="hidden min-h-11 items-center justify-center rounded-xl bg-violet-600 px-5 text-sm font-bold text-white transition hover:bg-violet-500 focus-visible:outline-2 focus-visible:outline-violet-300 sm:inline-flex"
+            type="button" data-modal-open="register">
+            Register
+          </button>
 
-      html:not(.app-ready)[data-theme='dark'] #theme-toggle-button,
-      html:not(.app-ready)[data-theme='dark'] #header-login-button,
-      html:not(.app-ready)[data-theme='dark'] #mobile-menu-open-button {
-        border-color: #475569;
-        background: #1e293b;
-        color: #ffffff;
-      }
-
-      html:not(.app-ready)[data-theme='light'] #theme-toggle-button,
-      html:not(.app-ready)[data-theme='light'] #header-login-button,
-      html:not(.app-ready)[data-theme='light'] #mobile-menu-open-button {
-        border-color: #e2e8f0;
-        background: #ffffff;
-        color: #0f172a;
-      }
-
-      html:not(.app-ready) [data-modal-open='register'] {
-        background: #7c3aed;
-        color: #ffffff;
-      }
-
-      html:not(.app-ready) #site-footer {
-        border-color: #e2e8f0;
-        background: #ffffff;
-      }
-
-      html:not(.app-ready)[data-theme='dark'] #site-footer {
-        border-color: rgba(51, 65, 85, 0.8);
-        background: #111827;
-      }
-
-      html:not(.app-ready) #site-footer a {
-        color: #c4b5fd;
-      }
-
-      @media (min-width: 1920px) {
-        html.app-ready #decorative-players {
-          display: block;
-        }
-      }
-    </style>
-  </head>
-
-  <body>
-    <!-- App -->
-    <div
-      id="app"
-      class="flex min-h-screen flex-col bg-[#0b1220] text-slate-100 opacity-0 transition-opacity duration-150"
-    >
-      <!-- Decorative players for wide screens -->
-      <div
-        id="decorative-players"
-        class="pointer-events-none fixed inset-y-0 left-0 right-0 z-0 hidden overflow-hidden min-[1920px]:block"
-        aria-hidden="true"
-      >
-        <div id="player-left-glow" class="fixed left-0 top-0 z-0 h-full w-[400px]"></div>
-
-        <img
-          id="player-left-image"
-          src="/player-right-blue.webp"
-          alt=""
-          class="fixed left-8 top-24 z-10 h-[calc(100vh-8rem)] max-h-[800px] object-contain object-left-bottom"
-        />
-
-        <div id="player-right-glow" class="fixed right-0 top-0 z-0 h-full w-[400px]"></div>
-
-        <img
-          id="player-right-image"
-          src="/player-left-yellow.webp"
-          alt=""
-          class="fixed right-8 top-24 z-10 h-[calc(100vh-8rem)] max-h-[800px] object-contain object-right-bottom"
-        />
+          <button id="mobile-menu-open-button"
+            class="inline-flex min-h-10 min-w-10 items-center justify-center rounded-xl border transition lg:hidden hover:border-violet-400 focus-visible:outline-2 focus-visible:outline-violet-400"
+            type="button" data-menu-open aria-label="Open menu" aria-expanded="false">
+            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+            </svg>
+          </button>
+        </div>
       </div>
+    </header>
 
-      <!-- Header -->
-      <header id="site-header" class="sticky top-0 z-50 border-b backdrop-blur-xl">
-        <div
-          class="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8"
-        >
-          <a
-            class="inline-flex max-w-[160px] items-center focus-visible:outline-2 focus-visible:outline-violet-400 sm:max-w-none"
-            href="#"
-            data-page-link="predictions"
-            aria-label="MatchForecast home"
-          >
-            <img
-              id="header-logo"
-              src="/logo.png"
-              alt="MatchForecast logo"
-              class="h-11 w-auto sm:h-12 lg:h-14"
-            />
-          </a>
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="hidden fixed inset-0 z-[90] bg-slate-950/70 backdrop-blur-md lg:hidden"
+      data-menu-overlay role="presentation">
+      <div id="mobile-menu-panel" class="ml-auto flex h-full w-full max-w-sm flex-col border-l shadow-2xl" role="dialog"
+        aria-modal="true" aria-label="Mobile navigation">
+        <div id="mobile-menu-header" class="flex items-center justify-between gap-4 border-b px-5 py-4">
+          <img id="mobile-menu-logo" src="/logo.png" alt="MatchForecast logo" class="h-11 w-auto">
 
-          <nav
-            class="hidden items-center gap-7 text-sm font-semibold lg:flex"
-            aria-label="Main navigation"
-          >
-            <a href="#" data-page-link="predictions" data-header-nav-link="predictions"
-              >Predictions</a
-            >
-            <a href="#" data-page-link="calendar" data-header-nav-link="calendar">Calendar</a>
-            <a href="#" data-page-link="ratings" data-header-nav-link="ratings">Ratings</a>
-            <a href="#" data-page-link="rules" data-header-nav-link="rules">Rules</a>
-          </nav>
+          <button id="mobile-menu-close-button"
+            class="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border transition focus-visible:outline-2 focus-visible:outline-violet-400"
+            type="button" data-menu-close aria-label="Close menu">
+            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+            </svg>
+          </button>
+        </div>
 
-          <div class="flex items-center gap-2">
-            <button
-              id="theme-toggle-button"
-              class="inline-flex min-h-10 min-w-10 items-center justify-center rounded-xl border text-sm font-semibold transition sm:min-h-11 sm:min-w-11 hover:border-violet-400 focus-visible:outline-2 focus-visible:outline-violet-400"
-              type="button"
-              data-theme-toggle
-              aria-label="Switch theme"
-            >
-              ☾
-            </button>
+        <nav class="flex-1 overflow-y-auto px-5 py-5" aria-label="Mobile navigation links">
+          <ul class="grid gap-3">
+            <li>
+              <a href="#" data-page-link="predictions" data-menu-link data-mobile-nav-link="predictions">
+                <span>↗</span>
+                <span>
+                  <span>Predictions</span>
+                  <span>Create and manage score forecasts</span>
+                </span>
+              </a>
+            </li>
 
-            <button
-              id="header-login-button"
-              class="hidden min-h-11 items-center justify-center rounded-xl border px-5 text-sm font-bold transition sm:inline-flex hover:border-violet-400 focus-visible:outline-2 focus-visible:outline-violet-400"
-              type="button"
-              data-modal-open="login"
-            >
+            <li>
+              <a href="#" data-page-link="calendar" data-menu-link data-mobile-nav-link="calendar">
+                <span>📅</span>
+                <span>
+                  <span>Calendar</span>
+                  <span>Browse matches by group</span>
+                </span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" data-page-link="ratings" data-menu-link data-mobile-nav-link="ratings">
+                <span>🏆</span>
+                <span>
+                  <span>Ratings</span>
+                  <span>Compare user prediction scores</span>
+                </span>
+              </a>
+            </li>
+
+            <li>
+              <a href="#" data-page-link="rules" data-menu-link data-mobile-nav-link="rules">
+                <span>☑</span>
+                <span>
+                  <span>Rules</span>
+                  <span>Learn how points are calculated</span>
+                </span>
+              </a>
+            </li>
+          </ul>
+
+          <div id="mobile-auth-actions" class="mt-6 grid gap-3 border-t pt-5">
+            <button id="mobile-login-button"
+              class="inline-flex min-h-12 items-center justify-center rounded-2xl border px-5 text-sm font-bold transition focus-visible:outline-2 focus-visible:outline-violet-400"
+              type="button" data-modal-open="login">
               Login
             </button>
 
             <button
-              class="hidden min-h-11 items-center justify-center rounded-xl bg-violet-600 px-5 text-sm font-bold text-white transition hover:bg-violet-500 focus-visible:outline-2 focus-visible:outline-violet-300 sm:inline-flex"
-              type="button"
-              data-modal-open="register"
-            >
+              class="inline-flex min-h-12 items-center justify-center rounded-2xl bg-gradient-to-r from-violet-600 to-blue-600 px-5 text-sm font-bold text-white shadow-lg shadow-violet-950/25 transition hover:-translate-y-0.5 hover:from-violet-500 hover:to-blue-500 focus-visible:outline-2 focus-visible:outline-violet-300"
+              type="button" data-modal-open="register">
               Register
             </button>
-
-            <button
-              id="mobile-menu-open-button"
-              class="inline-flex min-h-10 min-w-10 items-center justify-center rounded-xl border transition lg:hidden hover:border-violet-400 focus-visible:outline-2 focus-visible:outline-violet-400"
-              type="button"
-              data-menu-open
-              aria-label="Open menu"
-              aria-expanded="false"
-            >
-              <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path
-                  d="M4 7h16M4 12h16M4 17h16"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                ></path>
-              </svg>
-            </button>
           </div>
-        </div>
-      </header>
-
-      <!-- Mobile menu -->
-      <div
-        id="mobile-menu"
-        class="hidden fixed inset-0 z-[90] bg-slate-950/70 backdrop-blur-md lg:hidden"
-        data-menu-overlay
-        role="presentation"
-      >
-        <aside
-          id="mobile-menu-panel"
-          class="ml-auto flex h-full w-full max-w-sm flex-col border-l shadow-2xl"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Mobile navigation"
-        >
-          <div
-            id="mobile-menu-header"
-            class="flex items-center justify-between gap-4 border-b px-5 py-4"
-          >
-            <img
-              id="mobile-menu-logo"
-              src="/logo.png"
-              alt="MatchForecast logo"
-              class="h-11 w-auto"
-            />
-
-            <button
-              id="mobile-menu-close-button"
-              class="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border transition focus-visible:outline-2 focus-visible:outline-violet-400"
-              type="button"
-              data-menu-close
-              aria-label="Close menu"
-            >
-              <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path
-                  d="M6 6l12 12M18 6 6 18"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                ></path>
-              </svg>
-            </button>
-          </div>
-
-          <nav class="flex-1 overflow-y-auto px-5 py-5" aria-label="Mobile navigation links">
-            <ul class="grid gap-3">
-              <li>
-                <a
-                  href="#"
-                  data-page-link="predictions"
-                  data-menu-link
-                  data-mobile-nav-link="predictions"
-                >
-                  <span>↗</span>
-                  <span>
-                    <span>Predictions</span>
-                    <span>Create and manage score forecasts</span>
-                  </span>
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href="#"
-                  data-page-link="calendar"
-                  data-menu-link
-                  data-mobile-nav-link="calendar"
-                >
-                  <span>📅</span>
-                  <span>
-                    <span>Calendar</span>
-                    <span>Browse matches by group</span>
-                  </span>
-                </a>
-              </li>
-
-              <li>
-                <a href="#" data-page-link="ratings" data-menu-link data-mobile-nav-link="ratings">
-                  <span>🏆</span>
-                  <span>
-                    <span>Ratings</span>
-                    <span>Compare user prediction scores</span>
-                  </span>
-                </a>
-              </li>
-
-              <li>
-                <a href="#" data-page-link="rules" data-menu-link data-mobile-nav-link="rules">
-                  <span>☑</span>
-                  <span>
-                    <span>Rules</span>
-                    <span>Learn how points are calculated</span>
-                  </span>
-                </a>
-              </li>
-            </ul>
-
-            <div id="mobile-auth-actions" class="mt-6 grid gap-3 border-t pt-5">
-              <button
-                id="mobile-login-button"
-                class="inline-flex min-h-12 items-center justify-center rounded-2xl border px-5 text-sm font-bold transition focus-visible:outline-2 focus-visible:outline-violet-400"
-                type="button"
-                data-modal-open="login"
-              >
-                Login
-              </button>
-
-              <button
-                class="inline-flex min-h-12 items-center justify-center rounded-2xl bg-gradient-to-r from-violet-600 to-blue-600 px-5 text-sm font-bold text-white shadow-lg shadow-violet-950/25 transition hover:-translate-y-0.5 hover:from-violet-500 hover:to-blue-500 focus-visible:outline-2 focus-visible:outline-violet-300"
-                type="button"
-                data-modal-open="register"
-              >
-                Register
-              </button>
-            </div>
-          </nav>
-        </aside>
+        </nav>
       </div>
+    </div>
 
-      <!-- Main content -->
-      <main
-        id="main-layout"
-        class="relative z-10 mx-auto w-full max-w-7xl flex-1 px-4 py-5 sm:px-6 sm:py-6 lg:px-8 min-[1920px]:max-w-6xl"
-      >
-        <!-- Predictions page -->
-        <section id="page-predictions" data-page="predictions">
-          <!-- Sports and tournament controls -->
-          <section
-            id="prediction-filters"
-            class="rounded-3xl border p-4"
-            aria-label="Prediction filters"
-          >
-            <div id="sport-tabs" class="grid gap-3 sm:grid-cols-3">
-              <button
-                class="inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl border px-4 py-3 text-sm font-semibold transition"
-                type="button"
-                data-sport-tab="football"
-              >
-                <span aria-hidden="true">⚽</span>
-                <span>Football</span>
-              </button>
+    <!-- Main content -->
+    <main id="main-layout"
+      class="relative z-10 mx-auto w-full max-w-7xl flex-1 px-4 py-5 sm:px-6 sm:py-6 lg:px-8 min-[1920px]:max-w-6xl">
+      <!-- Predictions page -->
+      <section id="page-predictions" data-page="predictions">
+        <h1 class="sr-only">MatchForecast predictions</h1>
+        <!-- Sports and tournament controls -->
+        <section id="prediction-filters" class="rounded-3xl border p-4" aria-label="Prediction filters">
+          <div id="sport-tabs" class="grid gap-3 sm:grid-cols-3">
+            <button
+              class="inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl border px-4 py-3 text-sm font-semibold transition"
+              type="button" data-sport-tab="football">
+              <span aria-hidden="true">⚽</span>
+              <span>Football</span>
+            </button>
 
-              <button
-                class="inline-flex min-h-11 cursor-not-allowed items-center justify-center gap-2 rounded-2xl border border-transparent px-4 py-3 text-sm font-semibold opacity-55 transition"
-                type="button"
-                disabled
-                aria-disabled="true"
-                aria-label="Basketball is coming soon"
-              >
-                <span aria-hidden="true">🏀</span>
-                <span>Basketball</span>
-                <span class="sr-only">Coming soon</span>
-              </button>
+            <button
+              class="inline-flex min-h-11 cursor-not-allowed items-center justify-center gap-2 rounded-2xl border border-transparent px-4 py-3 text-sm font-semibold opacity-55 transition"
+              type="button" disabled aria-label="Basketball is coming soon">
+              <span aria-hidden="true">🏀</span>
+              <span>Basketball</span>
+              <span class="sr-only">Coming soon</span>
+            </button>
 
-              <button
-                class="inline-flex min-h-11 cursor-not-allowed items-center justify-center gap-2 rounded-2xl border border-transparent px-4 py-3 text-sm font-semibold opacity-55 transition"
-                type="button"
-                disabled
-                aria-disabled="true"
-                aria-label="Tennis is coming soon"
-              >
-                <span aria-hidden="true">🎾</span>
-                <span>Tennis</span>
-                <span class="sr-only">Coming soon</span>
-              </button>
-            </div>
+            <button
+              class="inline-flex min-h-11 cursor-not-allowed items-center justify-center gap-2 rounded-2xl border border-transparent px-4 py-3 text-sm font-semibold opacity-55 transition"
+              type="button" disabled aria-label="Tennis is coming soon">
+              <span aria-hidden="true">🎾</span>
+              <span>Tennis</span>
+              <span class="sr-only">Coming soon</span>
+            </button>
+          </div>
 
-            <div class="relative mt-4" data-tournament-dropdown>
-              <button
-                id="tournament-toggle"
-                class="inline-flex min-h-12 w-full items-center justify-between gap-3 rounded-2xl border px-5 text-left text-sm font-semibold leading-none transition hover:border-violet-400 focus-visible:outline-2 focus-visible:outline-violet-400 sm:text-base"
-                type="button"
-                data-tournament-toggle
-                aria-expanded="false"
-                aria-haspopup="listbox"
-              >
-                <span id="active-tournament-label" class="min-w-0 truncate"
-                  >🏆 FIFA World Cup 2026</span
-                >
+          <div class="relative mt-4" data-tournament-dropdown>
+            <button id="tournament-toggle"
+              class="inline-flex min-h-12 w-full items-center justify-between gap-3 rounded-2xl border px-5 text-left text-sm font-semibold leading-none transition hover:border-violet-400 focus-visible:outline-2 focus-visible:outline-violet-400 sm:text-base"
+              type="button" data-tournament-toggle aria-expanded="false" aria-haspopup="listbox">
+              <span id="active-tournament-label" class="min-w-0 truncate">🏆 FIFA World Cup 2026</span>
 
-                <span
-                  id="tournament-arrow"
-                  class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-violet-300 transition"
-                  aria-hidden="true"
-                >
-                  <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none">
-                    <path
-                      d="M5 7.5L10 12.5L15 7.5"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    ></path>
-                  </svg>
-                </span>
-              </button>
+              <span id="tournament-arrow"
+                class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-violet-300 transition"
+                aria-hidden="true">
+                <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none">
+                  <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round"></path>
+                </svg>
+              </span>
+            </button>
 
-              <div
-                id="tournament-list"
-                class="hidden absolute left-0 right-0 top-[calc(100%+0.5rem)] z-40 overflow-hidden rounded-2xl border shadow-2xl"
-                role="listbox"
-              ></div>
-            </div>
-          </section>
-
-          <!-- Featured match -->
-          <section
-            id="featured-match"
-            class="relative mt-5 overflow-hidden rounded-3xl border border-violet-500/30 shadow-2xl shadow-violet-950/20 sm:mt-6"
-            aria-labelledby="featured-match-title"
-          ></section>
-
-          <!-- Upcoming matches -->
-          <section
-            id="upcoming-matches-section"
-            class="mt-5 rounded-3xl border p-5 sm:mt-6"
-            aria-labelledby="calendar-title"
-          >
-            <div class="mb-5 grid gap-4 xl:grid-cols-[1fr_auto] xl:items-center">
-              <div>
-                <p class="text-sm font-semibold uppercase tracking-widest text-violet-400">
-                  Calendar
-                </p>
-                <h2 id="calendar-title" class="mt-1 text-xl font-bold"></h2>
-              </div>
-
-              <div class="w-full xl:w-[430px]">
-                <div class="grid gap-3 sm:grid-cols-[1fr_auto]">
-                  <div
-                    class="grid grid-cols-[44px_minmax(0,180px)_44px] gap-2 sm:grid-cols-[44px_170px_44px]"
-                  >
-                    <button
-                      class="inline-flex min-h-12 items-center justify-center rounded-2xl border border-violet-500/30 text-violet-300 transition hover:bg-violet-500/15 focus-visible:outline-2 focus-visible:outline-violet-400"
-                      type="button"
-                      data-schedule-prev
-                      aria-label="Previous available schedule date"
-                    >
-                      ‹
-                    </button>
-
-                    <label class="block min-w-0">
-                      <span class="sr-only">Choose schedule date</span>
-
-                      <input
-                        id="schedule-date-input"
-                        class="min-h-12 w-full rounded-2xl border px-3 text-sm font-bold transition focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-500/30"
-                        type="date"
-                        data-schedule-date
-                        aria-label="Choose schedule date"
-                      />
-                    </label>
-
-                    <button
-                      class="inline-flex min-h-12 items-center justify-center rounded-2xl border border-violet-500/30 text-violet-300 transition hover:bg-violet-500/15 focus-visible:outline-2 focus-visible:outline-violet-400"
-                      type="button"
-                      data-schedule-next
-                      aria-label="Next available schedule date"
-                    >
-                      ›
-                    </button>
-                  </div>
-
-                  <button
-                    class="inline-flex min-h-12 items-center justify-center rounded-2xl border border-violet-500/30 px-5 text-sm font-bold text-violet-300 transition hover:bg-violet-500/15 focus-visible:outline-2 focus-visible:outline-violet-400"
-                    type="button"
-                    data-schedule-reset
-                  >
-                    Reset
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div id="upcoming-matches-root"></div>
-          </section>
-
-          <!-- Home bottom widgets -->
-          <div
-            class="mt-5 grid items-stretch gap-5 sm:mt-6 sm:gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]"
-          >
-            <section
-              id="standings-section"
-              class="h-full rounded-3xl border p-5"
-              aria-labelledby="standings-title"
-            >
-              <div class="mb-5 flex items-start justify-between gap-4">
-                <div>
-                  <p
-                    id="standings-group-label"
-                    class="text-sm font-semibold uppercase tracking-widest text-violet-400"
-                  ></p>
-                  <h2 id="standings-title" class="mt-1 text-xl font-bold">Standings</h2>
-                </div>
-
-                <div class="flex items-center gap-2">
-                  <button
-                    class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-violet-500/30 text-violet-300 transition hover:bg-violet-500/15 disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-violet-400"
-                    type="button"
-                    data-standings-prev
-                    aria-label="Previous standings group"
-                  >
-                    ‹
-                  </button>
-
-                  <button
-                    class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-violet-500/30 text-violet-300 transition hover:bg-violet-500/15 disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-violet-400"
-                    type="button"
-                    data-standings-next
-                    aria-label="Next standings group"
-                  >
-                    ›
-                  </button>
-                </div>
-              </div>
-
-              <div id="standings-root"></div>
-              <div
-                id="standings-pagination"
-                class="mt-5 flex flex-wrap justify-center gap-1.5"
-                aria-label="Standings groups pagination"
-              ></div>
-            </section>
-
-            <section
-              id="top-predictors-section"
-              class="h-full rounded-3xl border p-5"
-              aria-labelledby="top-predictors-title"
-            >
-              <div class="mb-4 flex items-center gap-3">
-                <span
-                  class="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-violet-500/15 text-violet-400"
-                >
-                  ☆
-                </span>
-
-                <div>
-                  <p class="text-sm font-semibold uppercase tracking-widest text-violet-400">
-                    Ratings
-                  </p>
-                  <h2 id="top-predictors-title" class="text-xl font-bold">Leaderboard</h2>
-                </div>
-              </div>
-
-              <div id="top-predictors-root"></div>
-            </section>
+            <div id="tournament-list"
+              class="hidden absolute left-0 right-0 top-[calc(100%+0.5rem)] z-40 overflow-hidden rounded-2xl border shadow-2xl"
+              role="listbox"></div>
           </div>
         </section>
 
-        <!-- Calendar page -->
-        <section
-          id="page-calendar"
-          class="hidden rounded-3xl border p-5"
-          data-page="calendar"
-          aria-labelledby="calendar-page-title"
-        >
-          <div class="mb-6 grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end">
+        <!-- Featured match -->
+        <div id="featured-match"
+          class="relative mt-5 overflow-hidden rounded-3xl border border-violet-500/30 shadow-2xl shadow-violet-950/20 sm:mt-6">
+        </div>
+
+        <!-- Upcoming matches -->
+        <section id="upcoming-matches-section" class="mt-5 rounded-3xl border p-5 sm:mt-6"
+          aria-labelledby="calendar-title">
+          <div class="mb-5 grid gap-4 xl:grid-cols-[1fr_auto] xl:items-center">
             <div>
               <p class="text-sm font-semibold uppercase tracking-widest text-violet-400">
                 Calendar
               </p>
-
-              <h1 id="calendar-page-title" class="mt-2 text-3xl font-black">
-                FIFA World Cup 2026 match schedule
-              </h1>
-
-              <p class="mt-2 max-w-2xl text-sm" data-muted-text>
-                Browse group stage matches, compare player predictions and follow upcoming fixtures.
-              </p>
+              <h2 id="calendar-title" class="mt-1 text-xl font-bold">Thursday, Jun 11, 2026</h2>
             </div>
 
-            <button
-              class="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-violet-600 px-7 text-sm font-bold text-white shadow-lg shadow-violet-950/25 transition hover:-translate-y-0.5 hover:bg-violet-500 focus-visible:outline-2 focus-visible:outline-violet-300"
-              type="button"
-              data-filter-open
-            >
-              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path
-                  d="M4 6h16M7 12h10M10 18h4"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                ></path>
-              </svg>
-              <span>Filters</span>
-            </button>
-          </div>
+            <div class="w-full xl:w-[430px]">
+              <div class="grid gap-3 sm:grid-cols-[1fr_auto]">
+                <div class="grid grid-cols-[44px_minmax(0,180px)_44px] gap-2 sm:grid-cols-[44px_170px_44px]">
+                  <button
+                    class="inline-flex min-h-12 items-center justify-center rounded-2xl border border-violet-500/30 text-violet-300 transition hover:bg-violet-500/15 focus-visible:outline-2 focus-visible:outline-violet-400"
+                    type="button" data-schedule-prev aria-label="Previous available schedule date">
+                    ‹
+                  </button>
 
-          <div id="active-filters-root"></div>
-          <div id="calendar-page-root"></div>
-        </section>
+                  <label class="block min-w-0">
+                    <span class="sr-only">Choose schedule date</span>
 
-        <!-- Ratings page -->
-        <section
-          id="page-ratings"
-          class="hidden rounded-3xl border p-5"
-          data-page="ratings"
-          aria-labelledby="ratings-page-title"
-        >
-          <div class="mb-6 grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end">
-            <div>
-              <p class="text-sm font-semibold uppercase tracking-widest text-violet-400">Ratings</p>
+                    <input id="schedule-date-input"
+                      class="min-h-12 w-full rounded-2xl border px-3 text-sm font-bold transition focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-500/30"
+                      type="date" data-schedule-date aria-label="Choose schedule date">
+                  </label>
 
-              <h1 id="ratings-page-title" class="mt-2 text-3xl font-black">Player leaderboard</h1>
+                  <button
+                    class="inline-flex min-h-12 items-center justify-center rounded-2xl border border-violet-500/30 text-violet-300 transition hover:bg-violet-500/15 focus-visible:outline-2 focus-visible:outline-violet-400"
+                    type="button" data-schedule-next aria-label="Next available schedule date">
+                    ›
+                  </button>
+                </div>
 
-              <p class="mt-2 max-w-2xl text-sm" data-muted-text>
-                Compare exact score predictions, correct outcomes and total points across all
-                players.
-              </p>
-            </div>
-
-            <div id="ratings-summary" class="grid grid-cols-3 gap-3 rounded-2xl border p-3">
-              <div class="text-center">
-                <p class="text-2xl font-black text-violet-400">6</p>
-                <p class="text-xs font-semibold" data-muted-text>Players</p>
-              </div>
-
-              <div class="text-center">
-                <p class="text-2xl font-black text-violet-400">72</p>
-                <p class="text-xs font-semibold" data-muted-text>Total pts</p>
-              </div>
-
-              <div class="text-center">
-                <p class="text-2xl font-black text-violet-400">19</p>
-                <p class="text-xs font-semibold" data-muted-text>Exact</p>
+                <button
+                  class="inline-flex min-h-12 items-center justify-center rounded-2xl border border-violet-500/30 px-5 text-sm font-bold text-violet-300 transition hover:bg-violet-500/15 focus-visible:outline-2 focus-visible:outline-violet-400"
+                  type="button" data-schedule-reset>
+                  Reset
+                </button>
               </div>
             </div>
           </div>
 
-          <div id="ratings-root"></div>
+          <div id="upcoming-matches-root"></div>
         </section>
 
-        <!-- Rules page -->
-        <section
-          id="page-rules"
-          class="hidden rounded-3xl border p-5"
-          data-page="rules"
-          aria-labelledby="rules-page-title"
-        >
-          <p class="text-sm font-semibold uppercase tracking-widest text-violet-400">Rules</p>
+        <!-- Home bottom widgets -->
+        <div class="mt-5 grid items-stretch gap-5 sm:mt-6 sm:gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
+          <section id="standings-section" class="h-full rounded-3xl border p-5" aria-labelledby="standings-title">
+            <div class="mb-5 flex items-start justify-between gap-4">
+              <div>
+                <p id="standings-group-label" class="text-sm font-semibold uppercase tracking-widest text-violet-400">
+                </p>
+                <h2 id="standings-title" class="mt-1 text-xl font-bold">Standings</h2>
+              </div>
 
-          <h1 id="rules-page-title" class="mt-2 text-3xl font-black">Scoring rules</h1>
+              <div class="flex items-center gap-2">
+                <button
+                  class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-violet-500/30 text-violet-300 transition hover:bg-violet-500/15 disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-violet-400"
+                  type="button" data-standings-prev aria-label="Previous standings group">
+                  ‹
+                </button>
 
-          <p class="mt-2 max-w-2xl text-sm" data-muted-text>
-            Predictions are for score-based competition only. No real-money betting is used.
-          </p>
+                <button
+                  class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-violet-500/30 text-violet-300 transition hover:bg-violet-500/15 disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-violet-400"
+                  type="button" data-standings-next aria-label="Next standings group">
+                  ›
+                </button>
+              </div>
+            </div>
 
-          <div id="rules-root" class="mt-6 grid gap-4 md:grid-cols-3"></div>
-        </section>
-      </main>
+            <div id="standings-root"></div>
+            <div id="standings-pagination" class="mt-5 flex flex-wrap justify-center gap-1.5" role="navigation"
+              aria-label="Standings groups pagination"></div>
+          </section>
 
-      <!-- Footer -->
-      <footer id="site-footer" class="relative z-10 mt-8 border-t">
-        <div
-          class="mx-auto grid w-full max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[minmax(0,420px)_minmax(0,1fr)] lg:items-start lg:px-8 min-[1920px]:max-w-6xl"
-        >
-          <div class="min-w-0">
-            <img id="footer-logo" src="/logo.png" alt="MatchForecast logo" class="h-14 w-auto" />
+          <section id="top-predictors-section" class="h-full rounded-3xl border p-5"
+            aria-labelledby="top-predictors-title">
+            <div class="mb-4 flex items-center gap-3">
+              <span
+                class="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-violet-500/15 text-violet-400">
+                ☆
+              </span>
 
-            <p id="footer-description" class="mt-3 max-w-md text-sm">
-              MatchForecast helps fans make score predictions, track match results and compare their
-              insights.
+              <div>
+                <p class="text-sm font-semibold uppercase tracking-widest text-violet-400">
+                  Ratings
+                </p>
+                <h2 id="top-predictors-title" class="text-xl font-bold">Leaderboard</h2>
+              </div>
+            </div>
+
+            <div id="top-predictors-root"></div>
+          </section>
+        </div>
+      </section>
+
+      <!-- Calendar page -->
+      <section id="page-calendar" class="hidden rounded-3xl border p-5" data-page="calendar"
+        aria-labelledby="calendar-page-title">
+        <div class="mb-6 grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end">
+          <div>
+            <p class="text-sm font-semibold uppercase tracking-widest text-violet-400">
+              Calendar
+            </p>
+
+            <h1 id="calendar-page-title" class="mt-2 text-3xl font-black">
+              FIFA World Cup 2026 match schedule
+            </h1>
+
+            <p class="mt-2 max-w-2xl text-sm" data-muted-text>
+              Browse group stage matches, compare player predictions and follow upcoming fixtures.
             </p>
           </div>
 
-          <nav class="min-w-0 lg:justify-self-end" aria-label="Footer navigation">
-            <ul
-              class="flex max-w-[560px] flex-wrap gap-x-5 gap-y-3 text-sm font-semibold text-violet-300 lg:justify-end"
-            >
-              <li>
-                <a
-                  class="inline-flex transition hover:text-violet-200 focus-visible:outline-2 focus-visible:outline-violet-400"
-                  href="#"
-                  data-page-link="predictions"
-                >
-                  Predictions
-                </a>
-              </li>
-
-              <li>
-                <a
-                  class="inline-flex transition hover:text-violet-200 focus-visible:outline-2 focus-visible:outline-violet-400"
-                  href="#"
-                  data-page-link="calendar"
-                >
-                  Calendar
-                </a>
-              </li>
-
-              <li>
-                <a
-                  class="inline-flex transition hover:text-violet-200 focus-visible:outline-2 focus-visible:outline-violet-400"
-                  href="#"
-                  data-page-link="ratings"
-                >
-                  Ratings
-                </a>
-              </li>
-
-              <li>
-                <a
-                  class="inline-flex transition hover:text-violet-200 focus-visible:outline-2 focus-visible:outline-violet-400"
-                  href="#"
-                  data-page-link="rules"
-                >
-                  Rules
-                </a>
-              </li>
-
-              <li>
-                <a
-                  class="inline-flex transition hover:text-violet-200 focus-visible:outline-2 focus-visible:outline-violet-400"
-                  href="#"
-                >
-                  Help Center
-                </a>
-              </li>
-            </ul>
-          </nav>
+          <button
+            class="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-violet-600 px-7 text-sm font-bold text-white shadow-lg shadow-violet-950/25 transition hover:-translate-y-0.5 hover:bg-violet-500 focus-visible:outline-2 focus-visible:outline-violet-300"
+            type="button" data-filter-open>
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+            </svg>
+            <span>Filters</span>
+          </button>
         </div>
 
-        <div id="footer-copyright" class="border-t px-4 py-5 text-center text-sm">
-          © 2026. Andrii Dolzhenko. All Rights Reserved.
+        <div id="active-filters-root"></div>
+        <div id="calendar-page-root"></div>
+      </section>
+
+      <!-- Ratings page -->
+      <section id="page-ratings" class="hidden rounded-3xl border p-5" data-page="ratings"
+        aria-labelledby="ratings-page-title">
+        <div class="mb-6 grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end">
+          <div>
+            <p class="text-sm font-semibold uppercase tracking-widest text-violet-400">Ratings</p>
+
+            <h1 id="ratings-page-title" class="mt-2 text-3xl font-black">Player leaderboard</h1>
+
+            <p class="mt-2 max-w-2xl text-sm" data-muted-text>
+              Compare exact score predictions, correct outcomes and total points across all
+              players.
+            </p>
+          </div>
+
+          <div id="ratings-summary" class="grid grid-cols-3 gap-3 rounded-2xl border p-3">
+            <div class="text-center">
+              <p class="text-2xl font-black text-violet-400">6</p>
+              <p class="text-xs font-semibold" data-muted-text>Players</p>
+            </div>
+
+            <div class="text-center">
+              <p class="text-2xl font-black text-violet-400">72</p>
+              <p class="text-xs font-semibold" data-muted-text>Total pts</p>
+            </div>
+
+            <div class="text-center">
+              <p class="text-2xl font-black text-violet-400">19</p>
+              <p class="text-xs font-semibold" data-muted-text>Exact</p>
+            </div>
+          </div>
         </div>
-      </footer>
 
-      <!-- Authentication modal -->
-      <div id="auth-modal-root"></div>
+        <div id="ratings-root"></div>
+      </section>
 
-      <!-- Calendar filters modal -->
-      <div id="filter-modal-root"></div>
-    </div>
+      <!-- Rules page -->
+      <section id="page-rules" class="hidden rounded-3xl border p-5" data-page="rules"
+        aria-labelledby="rules-page-title">
+        <p class="text-sm font-semibold uppercase tracking-widest text-violet-400">Rules</p>
 
-    <script type="module" src="/src/main.js"></script>
-  </body>
+        <h1 id="rules-page-title" class="mt-2 text-3xl font-black">Scoring rules</h1>
+
+        <p class="mt-2 max-w-2xl text-sm" data-muted-text>
+          Predictions are for score-based competition only. No real-money betting is used.
+        </p>
+
+        <div id="rules-root" class="mt-6 grid gap-4 md:grid-cols-3"></div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer id="site-footer" class="relative z-10 mt-8 border-t">
+      <div
+        class="mx-auto grid w-full max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[minmax(0,420px)_minmax(0,1fr)] lg:items-start lg:px-8 min-[1920px]:max-w-6xl">
+        <div class="min-w-0">
+          <img id="footer-logo" src="/logo.png" alt="MatchForecast logo" class="h-14 w-auto">
+
+          <p id="footer-description" class="mt-3 max-w-md text-sm">
+            MatchForecast helps fans make score predictions, track match results and compare their
+            insights.
+          </p>
+        </div>
+
+        <nav class="min-w-0 lg:justify-self-end" aria-label="Footer navigation">
+          <ul class="flex max-w-[560px] flex-wrap gap-x-5 gap-y-3 text-sm font-semibold text-violet-300 lg:justify-end">
+            <li>
+              <a class="inline-flex transition hover:text-violet-200 focus-visible:outline-2 focus-visible:outline-violet-400"
+                href="#" data-page-link="predictions">
+                Predictions
+              </a>
+            </li>
+
+            <li>
+              <a class="inline-flex transition hover:text-violet-200 focus-visible:outline-2 focus-visible:outline-violet-400"
+                href="#" data-page-link="calendar">
+                Calendar
+              </a>
+            </li>
+
+            <li>
+              <a class="inline-flex transition hover:text-violet-200 focus-visible:outline-2 focus-visible:outline-violet-400"
+                href="#" data-page-link="ratings">
+                Ratings
+              </a>
+            </li>
+
+            <li>
+              <a class="inline-flex transition hover:text-violet-200 focus-visible:outline-2 focus-visible:outline-violet-400"
+                href="#" data-page-link="rules">
+                Rules
+              </a>
+            </li>
+
+            <li>
+              <a class="inline-flex transition hover:text-violet-200 focus-visible:outline-2 focus-visible:outline-violet-400"
+                href="#">
+                Help Center
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <div id="footer-copyright" class="border-t px-4 py-5 text-center text-sm">
+        © 2026. Andrii Dolzhenko. All Rights Reserved.
+      </div>
+    </footer>
+
+    <!-- Authentication modal -->
+    <div id="auth-modal-root"></div>
+
+    <!-- Calendar filters modal -->
+    <div id="filter-modal-root"></div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+
 </html>
