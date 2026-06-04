@@ -7,6 +7,51 @@ import iliaAvatar from './assets/icons/ilia.png';
 import yuriiAvatar from './assets/icons/yurii.png';
 
 const app = document.querySelector('#app');
+
+const playerLeftGlow = document.querySelector('#player-left-glow');
+const playerRightGlow = document.querySelector('#player-right-glow');
+const playerLeftImage = document.querySelector('#player-left-image');
+const playerRightImage = document.querySelector('#player-right-image');
+
+const siteHeader = document.querySelector('#site-header');
+const headerLogo = document.querySelector('#header-logo');
+const headerNavLinks = document.querySelectorAll('[data-header-nav-link]');
+const themeToggleButton = document.querySelector('#theme-toggle-button');
+const headerLoginButton = document.querySelector('#header-login-button');
+const mobileMenuOpenButton = document.querySelector('#mobile-menu-open-button');
+
+const mobileMenu = document.querySelector('#mobile-menu');
+const mobileMenuPanel = document.querySelector('#mobile-menu-panel');
+const mobileMenuHeader = document.querySelector('#mobile-menu-header');
+const mobileMenuLogo = document.querySelector('#mobile-menu-logo');
+const mobileMenuCloseButton = document.querySelector('#mobile-menu-close-button');
+const mobileAuthActions = document.querySelector('#mobile-auth-actions');
+const mobileLoginButton = document.querySelector('#mobile-login-button');
+const mobileNavLinks = document.querySelectorAll('[data-mobile-nav-link]');
+const pageSections = document.querySelectorAll('[data-page]');
+const predictionFilters = document.querySelector('#prediction-filters');
+const featuredMatch = document.querySelector('#featured-match');
+const upcomingMatchesSection = document.querySelector('#upcoming-matches-section');
+const standingsSection = document.querySelector('#standings-section');
+
+const topPredictorsSection = document.querySelector('#top-predictors-section');
+
+const calendarPage = document.querySelector('#page-calendar');
+
+const ratingsPage = document.querySelector('#page-ratings');
+
+const rulesPage = document.querySelector('#page-rules');
+
+const siteFooter = document.querySelector('#site-footer');
+const footerLogo = document.querySelector('#footer-logo');
+const footerDescription = document.querySelector('#footer-description');
+const footerCopyright = document.querySelector('#footer-copyright');
+
+const authModalRoot = document.querySelector('#auth-modal-root');
+const filterModalRoot = document.querySelector('#filter-modal-root');
+
+const footerRoot = siteFooter;
+
 const publicAsset = (path) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
 
 const state = {
@@ -31,13 +76,6 @@ const state = {
     status: 'All matches'
   }
 };
-
-const navigationLinks = [
-  { label: 'Predictions', page: 'predictions' },
-  { label: 'Calendar', page: 'calendar' },
-  { label: 'Ratings', page: 'ratings' },
-  { label: 'Rules', page: 'rules' }
-];
 
 const sportTabs = [
   { name: 'Football', icon: '⚽', active: true },
@@ -244,201 +282,37 @@ const renderPlayerAvatar = (player, size = 'sm') => {
 
   if (player.avatar) {
     return `
-      <img
-        src="${player.avatar}"
-        alt="${player.name} avatar"
-        class="${sizeClass} rounded-full object-cover ring-2 ring-violet-500/20"
-      >
+      <span class="${sizeClass} inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-violet-500/15 ring-2 ring-violet-500/20 [backface-visibility:hidden] [transform:translateZ(0)]">
+        <img
+          src="${player.avatar}"
+          alt="${player.name} avatar"
+          class="h-full w-full rounded-full object-cover"
+        >
+      </span>
     `;
   }
 
   return `
-    <span class="${sizeClass} inline-flex items-center justify-center rounded-full bg-violet-500/15 text-xs font-black text-violet-400 ring-2 ring-violet-500/20">
+    <span class="${sizeClass} inline-flex shrink-0 items-center justify-center rounded-full bg-violet-500/15 text-xs font-black text-violet-400 ring-2 ring-violet-500/20 [backface-visibility:hidden] [transform:translateZ(0)]">
       ${player.initials}
     </span>
   `;
 };
 
-const renderDecorativePlayers = (theme) => `
-  <div aria-hidden="true" class="pointer-events-none fixed inset-y-0 left-0 right-0 z-0 hidden overflow-hidden min-[1920px]:block">
-    <div class="fixed left-0 top-0 z-0 h-full w-[400px] ${theme.playerGlowLeft}"></div>
+const renderTeamFlag = (src, alt, size = 'sm') => {
+  const sizeClass =
+    size === 'lg' ? 'h-14 w-14 min-[540px]:h-16 min-[540px]:w-16 md:h-20 md:w-20' : 'h-7 w-7';
 
-    <img
-      src="${publicAsset('player-right-blue.webp')}"
-      alt=""
-      class="fixed left-8 top-24 z-10 h-[calc(100vh-8rem)] max-h-[800px] object-contain object-left-bottom ${theme.playerImageFx} ${theme.playerOpacity}"
-    >
-
-    <div class="fixed right-0 top-0 z-0 h-full w-[400px] ${theme.playerGlowRight}"></div>
-
-    <img
-      src="${publicAsset('player-left-yellow.webp')}"
-      alt=""
-      class="fixed right-8 top-24 z-10 h-[calc(100vh-8rem)] max-h-[800px] object-contain object-right-bottom ${theme.playerImageFx} ${theme.playerOpacity}"
-    >
-  </div>
-`;
-
-const renderNavLinks = (theme, isMobile = false) =>
-  navigationLinks
-    .map((link) => {
-      const isActive = state.activePage === link.page;
-      const baseClass = isMobile
-        ? `group flex items-center gap-4 rounded-2xl border p-4 transition ${
-            theme.isDark
-              ? 'border-slate-700 bg-slate-900/70 hover:border-violet-500/60 hover:bg-violet-500/10'
-              : 'border-slate-200 bg-slate-50 hover:border-violet-300 hover:bg-violet-50'
-          }`
-        : isActive
-          ? 'text-violet-300'
-          : `${theme.mutedText} transition hover:text-violet-300`;
-
-      if (isMobile) {
-        const subtitles = {
-          predictions: 'Create and manage score forecasts',
-          calendar: 'Browse matches by group',
-          ratings: 'Compare user prediction scores',
-          rules: 'Learn how points are calculated'
-        };
-
-        const icons = {
-          predictions: '↗',
-          calendar: '📅',
-          ratings: '🏆',
-          rules: '☑'
-        };
-
-        return `
-          <li>
-            <a class="${baseClass}" href="#" data-page-link="${link.page}" data-menu-link>
-              <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-500/15 text-lg text-violet-300">
-                ${icons[link.page]}
-              </span>
-
-              <span>
-                <span class="block font-bold ${isActive ? 'text-violet-300' : theme.strongText}">
-                  ${link.label}
-                </span>
-
-                <span class="mt-1 block text-sm ${theme.mutedText}">
-                  ${subtitles[link.page]}
-                </span>
-              </span>
-            </a>
-          </li>
-        `;
-      }
-
-      return `
-        <a class="${baseClass}" href="#" data-page-link="${link.page}">
-          ${link.label}
-        </a>
-      `;
-    })
-    .join('');
-
-const renderHeader = (theme) => `
-  <header class="sticky top-0 z-50 border-b backdrop-blur-xl ${theme.header}">
-    <div class="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
-      <a
-        class="inline-flex max-w-[160px] items-center focus-visible:outline-2 focus-visible:outline-violet-400 sm:max-w-none"
-        href="#"
-        data-page-link="predictions"
-        aria-label="MatchForecast home"
-      >
-        <img src="${theme.logo}" alt="MatchForecast logo" class="h-11 w-auto sm:h-12 lg:h-14">
-      </a>
-
-      <nav class="hidden items-center gap-7 text-sm font-semibold lg:flex" aria-label="Main navigation">
-        ${renderNavLinks(theme)}
-      </nav>
-
-      <div class="flex items-center gap-2">
-        <button
-          class="inline-flex min-h-10 min-w-10 items-center justify-center rounded-xl border text-sm font-semibold transition sm:min-h-11 sm:min-w-11 ${theme.isDark ? 'border-slate-600 bg-slate-800 text-white' : 'border-slate-200 bg-white text-slate-900'} hover:border-violet-400 focus-visible:outline-2 focus-visible:outline-violet-400"
-          type="button"
-          data-theme-toggle
-          aria-label="Switch to ${theme.isDark ? 'light' : 'dark'} theme"
-        >
-          ${theme.isDark ? '☾' : '☀'}
-        </button>
-
-        <button
-          class="hidden min-h-11 items-center justify-center rounded-xl border px-5 text-sm font-bold transition sm:inline-flex ${theme.isDark ? 'border-slate-600 text-white' : 'border-slate-200 text-slate-950'} hover:border-violet-400 focus-visible:outline-2 focus-visible:outline-violet-400"
-          type="button"
-          data-modal-open="login"
-        >
-          Login
-        </button>
-
-        <button
-          class="hidden min-h-11 items-center justify-center rounded-xl bg-violet-600 px-5 text-sm font-bold text-white transition hover:bg-violet-500 focus-visible:outline-2 focus-visible:outline-violet-300 sm:inline-flex"
-          type="button"
-          data-modal-open="register"
-        >
-          Register
-        </button>
-
-        <button
-          class="inline-flex min-h-10 min-w-10 items-center justify-center rounded-xl border transition lg:hidden ${theme.isDark ? 'border-slate-600 bg-slate-800 text-white' : 'border-slate-200 bg-white text-slate-900'} hover:border-violet-400 focus-visible:outline-2 focus-visible:outline-violet-400"
-          type="button"
-          data-menu-open
-          aria-label="Open menu"
-          aria-expanded="${state.isMobileMenuOpen}"
-        >
-          ${renderIcon('menu')}
-        </button>
-      </div>
-    </div>
-  </header>
-`;
-
-const renderMobileMenu = (theme) => {
-  if (!state.isMobileMenuOpen) {
-    return '';
-  }
+  const ringClass = size === 'lg' ? 'ring-4 ring-white/15' : '';
 
   return `
-    <div class="fixed inset-0 z-[90] bg-slate-950/70 backdrop-blur-md lg:hidden" data-menu-overlay role="presentation">
-      <aside class="ml-auto flex h-full w-full max-w-sm flex-col border-l shadow-2xl ${theme.isDark ? 'border-slate-700 bg-[#111827]' : 'border-slate-200 bg-white'}" role="dialog" aria-modal="true" aria-label="Mobile navigation">
-        <div class="flex items-center justify-between gap-4 border-b px-5 py-4 ${theme.isDark ? 'border-slate-700' : 'border-slate-200'}">
-          <img src="${theme.logo}" alt="MatchForecast logo" class="h-11 w-auto">
-
-          <button
-            class="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border transition ${theme.isDark ? 'border-slate-600 text-white hover:border-violet-400' : 'border-slate-200 text-slate-700 hover:border-violet-400'} focus-visible:outline-2 focus-visible:outline-violet-400"
-            type="button"
-            data-menu-close
-            aria-label="Close menu"
-          >
-            ${renderIcon('close')}
-          </button>
-        </div>
-
-        <nav class="flex-1 overflow-y-auto px-5 py-5" aria-label="Mobile navigation links">
-          <ul class="grid gap-3">
-            ${renderNavLinks(theme, true)}
-          </ul>
-
-          <div class="mt-6 grid gap-3 border-t pt-5 ${theme.isDark ? 'border-slate-700' : 'border-slate-200'}">
-            <button
-              class="inline-flex min-h-12 items-center justify-center rounded-2xl border px-5 text-sm font-bold transition ${theme.isDark ? 'border-slate-600 text-white hover:border-violet-400' : 'border-slate-200 text-slate-950 hover:border-violet-400'} focus-visible:outline-2 focus-visible:outline-violet-400"
-              type="button"
-              data-modal-open="login"
-            >
-              Login
-            </button>
-
-            <button
-              class="inline-flex min-h-12 items-center justify-center rounded-2xl bg-gradient-to-r from-violet-600 to-blue-600 px-5 text-sm font-bold text-white shadow-lg shadow-violet-950/25 transition hover:-translate-y-0.5 hover:from-violet-500 hover:to-blue-500 focus-visible:outline-2 focus-visible:outline-violet-300"
-              type="button"
-              data-modal-open="register"
-            >
-              Register
-            </button>
-          </div>
-        </nav>
-      </aside>
-    </div>
+    <span class="${sizeClass} inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-violet-500/10 ${ringClass} [backface-visibility:hidden] [transform:translateZ(0)]">
+      <img
+        src="${src}"
+        alt="${alt}"
+        class="h-full w-full rounded-full object-cover"
+      >
+    </span>
   `;
 };
 
@@ -744,9 +618,9 @@ const renderFeaturedMatch = (theme) => {
 
   return `
     <section
-      class="relative overflow-hidden rounded-3xl border border-violet-500/30 shadow-2xl shadow-violet-950/20"
-      aria-labelledby="featured-match-title"
-    >
+  class="relative mt-5 overflow-hidden rounded-3xl border border-violet-500/30 shadow-2xl shadow-violet-950/20 sm:mt-6"
+  aria-labelledby="featured-match-title"
+>
       <img src="${theme.stadium}" alt="" class="absolute inset-0 h-full w-full object-cover">
 
       <div class="absolute inset-0 ${theme.isDark ? 'bg-slate-950/55' : 'bg-white/70'}"></div>
@@ -755,11 +629,9 @@ const renderFeaturedMatch = (theme) => {
       <div class="relative grid gap-5 p-4 min-[540px]:p-6 md:grid-cols-[1fr_auto_1fr] md:gap-8 lg:p-10">
         <div class="grid grid-cols-2 gap-3 md:contents">
           <div class="flex min-w-0 flex-col items-center text-center">
-            <img
-              src="${match.homeFlag}"
-              alt="${match.home} flag"
-              class="mb-3 h-14 w-14 rounded-full object-cover ring-4 ring-white/15 min-[540px]:h-16 min-[540px]:w-16 md:h-20 md:w-20"
-            >
+            <div class="mb-3">
+  ${renderTeamFlag(match.homeFlag, `${match.home} flag`, 'lg')}
+</div>
 
             <h1 id="featured-match-title" class="max-w-full truncate text-2xl font-bold ${theme.strongText} min-[540px]:text-3xl md:text-2xl">
               ${match.home}
@@ -771,11 +643,9 @@ const renderFeaturedMatch = (theme) => {
           </div>
 
           <div class="flex min-w-0 flex-col items-center text-center md:order-3">
-            <img
-              src="${match.awayFlag}"
-              alt="${match.away} flag"
-              class="mb-3 h-14 w-14 rounded-full object-cover ring-4 ring-white/15 min-[540px]:h-16 min-[540px]:w-16 md:h-20 md:w-20"
-            >
+            <div class="mb-3">
+  ${renderTeamFlag(match.awayFlag, `${match.away} flag`, 'lg')}
+</div>
 
             <h2 class="max-w-full truncate text-2xl font-bold ${theme.strongText} min-[540px]:text-3xl md:text-2xl">
               ${match.away}
@@ -837,7 +707,7 @@ const renderUpcomingMatches = (theme) => {
   const upcomingMatches = getVisibleScheduleMatches();
 
   return `
-    <section class="rounded-3xl border p-5 ${theme.card}" aria-labelledby="calendar-title">
+    <section class="mt-5 rounded-3xl border p-5 ${theme.card} sm:mt-6" aria-labelledby="calendar-title">
       <div class="mb-5 grid gap-4 xl:grid-cols-[1fr_auto] xl:items-center">
         <div>
           <p class="text-sm font-semibold uppercase tracking-widest text-violet-400">
@@ -891,11 +761,7 @@ const renderUpcomingMatches = (theme) => {
                         <div class="min-w-0">
                           <div class="grid gap-2">
                             <span class="grid grid-cols-[28px_minmax(0,1fr)] items-center gap-2 font-bold ${theme.strongText}">
-                              <img
-                                src="${match.homeFlag}"
-                                alt="${match.home} flag"
-                                class="h-7 w-7 rounded-full object-cover"
-                              >
+                              ${renderTeamFlag(match.homeFlag, `${match.home} flag`)}
 
                               <span class="min-w-0 break-words">
                                 ${match.home}
@@ -907,11 +773,7 @@ const renderUpcomingMatches = (theme) => {
                             </span>
 
                             <span class="grid grid-cols-[28px_minmax(0,1fr)] items-center gap-2 font-bold ${theme.strongText}">
-                              <img
-                                src="${match.awayFlag}"
-                                alt="${match.away} flag"
-                                class="h-7 w-7 rounded-full object-cover"
-                              >
+                              ${renderTeamFlag(match.awayFlag, `${match.away} flag`)}
 
                               <span class="min-w-0 break-words">
                                 ${match.away}
@@ -1966,82 +1828,15 @@ const renderFilterModal = (theme) => {
   `;
 };
 
-const renderFooter = (theme) => `
-  <footer class="relative z-10 mt-8 border-t ${theme.footer}">
-    <div class="mx-auto grid w-full max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[minmax(0,420px)_minmax(0,1fr)] lg:items-start lg:px-8 min-[1920px]:max-w-6xl">
-      <div class="min-w-0">
-        <img src="${theme.logo}" alt="MatchForecast logo" class="h-14 w-auto">
+const updateFooter = (theme) => {
+  footerRoot.className = `relative z-10 mt-8 border-t ${theme.footer}`;
+  footerLogo.src = theme.logo;
 
-        <p class="mt-3 max-w-md text-sm ${theme.mutedText}">
-          MatchForecast helps fans make score predictions, track match results and compare their insights.
-        </p>
-      </div>
+  footerDescription.className = `mt-3 max-w-md text-sm ${theme.mutedText}`;
 
-      <nav class="min-w-0 lg:justify-self-end" aria-label="Footer navigation">
-        <ul class="flex max-w-[560px] flex-wrap gap-x-5 gap-y-3 text-sm font-semibold text-violet-300 lg:justify-end">
-          ${navigationLinks
-            .map(
-              (link) => `
-                <li>
-                  <a
-                    class="inline-flex transition hover:text-violet-200 focus-visible:outline-2 focus-visible:outline-violet-400"
-                    href="#"
-                    data-page-link="${link.page}"
-                  >
-                    ${link.label}
-                  </a>
-                </li>
-              `
-            )
-            .join('')}
-
-          <li>
-            <a
-              class="inline-flex transition hover:text-violet-200 focus-visible:outline-2 focus-visible:outline-violet-400"
-              href="#"
-            >
-              Help Center
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </div>
-
-    <div class="border-t ${theme.isDark ? 'border-slate-700' : 'border-slate-200'} px-4 py-5 text-center text-sm ${theme.mutedText}">
-      © 2026. Andrii Dolzhenko. All Rights Reserved.
-    </div>
-  </footer>
-`;
-
-const renderMainContent = (theme) => {
-  if (state.activePage === 'calendar') {
-    return renderCalendarPage(theme);
-  }
-
-  if (state.activePage === 'ratings') {
-    return renderRatingsPage(theme);
-  }
-
-  if (state.activePage === 'rules') {
-    return renderRulesPage(theme);
-  }
-
-  return `
-    ${renderFilters(theme)}
-
-    <div class="mt-5 sm:mt-6">
-      ${renderFeaturedMatch(theme)}
-    </div>
-
-    <div class="mt-5 grid gap-5 sm:mt-6 sm:gap-6">
-      ${renderUpcomingMatches(theme)}
-
-      <div class="grid items-stretch gap-5 sm:gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
-        ${renderStandings(theme)}
-        ${renderTopPredictors(theme)}
-      </div>
-    </div>
-  `;
+  footerCopyright.className = `border-t ${
+    theme.isDark ? 'border-slate-700' : 'border-slate-200'
+  } px-4 py-5 text-center text-sm ${theme.mutedText}`;
 };
 
 const closeAuthModal = () => {
@@ -2075,30 +1870,175 @@ const applyFilters = () => {
   state.openCalendarGroups = filteredGroups.length > 0 ? [filteredGroups[0].group] : [];
 };
 
+const updateDecorativePlayers = (theme) => {
+  playerLeftGlow.className = `fixed left-0 top-0 z-0 h-full w-[400px] ${theme.playerGlowLeft}`;
+  playerRightGlow.className = `fixed right-0 top-0 z-0 h-full w-[400px] ${theme.playerGlowRight}`;
+
+  playerLeftImage.src = publicAsset('player-right-blue.webp');
+  playerLeftImage.className = `fixed left-8 top-24 z-10 h-[calc(100vh-8rem)] max-h-[800px] object-contain object-left-bottom ${theme.playerImageFx} ${theme.playerOpacity}`;
+
+  playerRightImage.src = publicAsset('player-left-yellow.webp');
+  playerRightImage.className = `fixed right-8 top-24 z-10 h-[calc(100vh-8rem)] max-h-[800px] object-contain object-right-bottom ${theme.playerImageFx} ${theme.playerOpacity}`;
+};
+
+const updateHeader = (theme) => {
+  siteHeader.className = `sticky top-0 z-50 border-b backdrop-blur-xl ${theme.header}`;
+  headerLogo.src = theme.logo;
+
+  headerNavLinks.forEach((link) => {
+    const isActive = state.activePage === link.dataset.pageLink;
+
+    link.className = isActive
+      ? 'text-violet-300'
+      : `${theme.mutedText} transition hover:text-violet-300`;
+  });
+
+  themeToggleButton.className = `inline-flex min-h-10 min-w-10 items-center justify-center rounded-xl border text-sm font-semibold sm:min-h-11 sm:min-w-11 ${
+    theme.isDark
+      ? 'border-slate-600 bg-slate-800 text-white'
+      : 'border-slate-200 bg-white text-slate-900'
+  } hover:border-violet-400 focus-visible:outline-2 focus-visible:outline-violet-400`;
+
+  themeToggleButton.textContent = theme.isDark ? '☾' : '☀';
+  themeToggleButton.setAttribute(
+    'aria-label',
+    `Switch to ${theme.isDark ? 'light' : 'dark'} theme`
+  );
+
+  headerLoginButton.className = `hidden min-h-11 items-center justify-center rounded-xl border px-5 text-sm font-bold sm:inline-flex ${
+    theme.isDark ? 'border-slate-600 text-white' : 'border-slate-200 text-slate-950'
+  } hover:border-violet-400 focus-visible:outline-2 focus-visible:outline-violet-400`;
+
+  mobileMenuOpenButton.className = `inline-flex min-h-10 min-w-10 items-center justify-center rounded-xl border lg:hidden ${
+    theme.isDark
+      ? 'border-slate-600 bg-slate-800 text-white'
+      : 'border-slate-200 bg-white text-slate-900'
+  } hover:border-violet-400 focus-visible:outline-2 focus-visible:outline-violet-400`;
+
+  mobileMenuOpenButton.setAttribute('aria-expanded', String(state.isMobileMenuOpen));
+};
+
+const updateMobileMenu = (theme) => {
+  mobileMenu.className = state.isMobileMenuOpen
+    ? 'fixed inset-0 z-[90] bg-slate-950/70 backdrop-blur-md lg:hidden'
+    : 'hidden fixed inset-0 z-[90] bg-slate-950/70 backdrop-blur-md lg:hidden';
+
+  mobileMenuPanel.className = `ml-auto flex h-full w-full max-w-sm flex-col border-l shadow-2xl ${
+    theme.isDark ? 'border-slate-700 bg-[#111827]' : 'border-slate-200 bg-white'
+  }`;
+
+  mobileMenuHeader.className = `flex items-center justify-between gap-4 border-b px-5 py-4 ${
+    theme.isDark ? 'border-slate-700' : 'border-slate-200'
+  }`;
+
+  mobileMenuLogo.src = theme.logo;
+
+  mobileMenuCloseButton.className = `inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border transition ${
+    theme.isDark
+      ? 'border-slate-600 text-white hover:border-violet-400'
+      : 'border-slate-200 text-slate-700 hover:border-violet-400'
+  } focus-visible:outline-2 focus-visible:outline-violet-400`;
+
+  mobileAuthActions.className = `mt-6 grid gap-3 border-t pt-5 ${
+    theme.isDark ? 'border-slate-700' : 'border-slate-200'
+  }`;
+
+  mobileLoginButton.className = `inline-flex min-h-12 items-center justify-center rounded-2xl border px-5 text-sm font-bold transition ${
+    theme.isDark
+      ? 'border-slate-600 text-white hover:border-violet-400'
+      : 'border-slate-200 text-slate-950 hover:border-violet-400'
+  } focus-visible:outline-2 focus-visible:outline-violet-400`;
+
+  mobileNavLinks.forEach((link) => {
+    const page = link.dataset.mobileNavLink;
+    const isActive = state.activePage === page;
+    const [icon, content] = link.children;
+    const [title, subtitle] = content.children;
+
+    link.className = `group flex items-center gap-4 rounded-2xl border p-4 transition ${
+      theme.isDark
+        ? 'border-slate-700 bg-slate-900/70 hover:border-violet-500/60 hover:bg-violet-500/10'
+        : 'border-slate-200 bg-slate-50 hover:border-violet-300 hover:bg-violet-50'
+    }`;
+
+    icon.className =
+      'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-500/15 text-lg text-violet-300';
+
+    title.className = `block font-bold ${isActive ? 'text-violet-300' : theme.strongText}`;
+    subtitle.className = `mt-1 block text-sm ${theme.mutedText}`;
+  });
+};
+
+const syncSectionFromMarkup = (targetElement, markup) => {
+  const template = document.createElement('template');
+
+  template.innerHTML = markup.trim();
+
+  const nextElement = template.content.firstElementChild;
+
+  if (!targetElement || !nextElement) {
+    return;
+  }
+
+  targetElement.className = nextElement.className;
+  targetElement.innerHTML = nextElement.innerHTML;
+};
+
+const togglePages = () => {
+  pageSections.forEach((section) => {
+    const isActive = section.dataset.page === state.activePage;
+
+    section.classList.toggle('hidden', !isActive);
+  });
+};
+
+const renderPredictionsContent = (theme) => {
+  syncSectionFromMarkup(predictionFilters, renderFilters(theme));
+  syncSectionFromMarkup(featuredMatch, renderFeaturedMatch(theme));
+  syncSectionFromMarkup(upcomingMatchesSection, renderUpcomingMatches(theme));
+  syncSectionFromMarkup(standingsSection, renderStandings(theme));
+  syncSectionFromMarkup(topPredictorsSection, renderTopPredictors(theme));
+};
+
+const renderPageContent = (theme) => {
+  renderPredictionsContent(theme);
+  syncSectionFromMarkup(calendarPage, renderCalendarPage(theme));
+  syncSectionFromMarkup(ratingsPage, renderRatingsPage(theme));
+  syncSectionFromMarkup(rulesPage, renderRulesPage(theme));
+
+  togglePages();
+};
+
 const renderApp = () => {
   const theme = getTheme();
 
-  app.innerHTML = `
-    <div class="flex min-h-screen flex-col ${theme.page}">
-      ${renderDecorativePlayers(theme)}
-      ${renderHeader(theme)}
-      ${renderMobileMenu(theme)}
+  document.documentElement.dataset.theme = state.theme;
+  document.body.className = theme.isDark ? 'bg-[#0b1220]' : 'bg-slate-50';
 
-      <main class="relative z-10 mx-auto w-full max-w-7xl flex-1 px-4 py-5 sm:px-6 sm:py-6 lg:px-8 min-[1920px]:max-w-6xl">
-        ${renderMainContent(theme)}
-      </main>
+  app.className = `flex min-h-screen flex-col ${theme.page}`;
 
-      ${renderFooter(theme)}
-      ${renderAuthModal(theme)}
-      ${renderFilterModal(theme)}
-    </div>
-  `;
+  updateDecorativePlayers(theme);
+  updateHeader(theme);
+  updateMobileMenu(theme);
+  updateFooter(theme);
+  renderPageContent(theme);
+
+  authModalRoot.innerHTML = renderAuthModal(theme);
+  filterModalRoot.innerHTML = renderFilterModal(theme);
 
   bindEvents();
+
+  document.documentElement.classList.add('app-ready');
 };
 
 const bindEvents = () => {
   document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
+    if (button.dataset.bound === 'true') {
+      return;
+    }
+
+    button.dataset.bound = 'true';
+
     button.addEventListener('click', () => {
       state.theme = state.theme === 'dark' ? 'light' : 'dark';
       localStorage.setItem('theme', state.theme);
@@ -2121,6 +2061,12 @@ const bindEvents = () => {
   });
 
   document.querySelectorAll('[data-page-link]').forEach((link) => {
+    if (link.dataset.bound === 'true') {
+      return;
+    }
+
+    link.dataset.bound = 'true';
+
     link.addEventListener('click', (event) => {
       event.preventDefault();
 
@@ -2147,6 +2093,12 @@ const bindEvents = () => {
   });
 
   document.querySelectorAll('[data-modal-open]').forEach((button) => {
+    if (button.dataset.bound === 'true') {
+      return;
+    }
+
+    button.dataset.bound = 'true';
+
     button.addEventListener('click', () => {
       state.activeModal = button.dataset.modalOpen;
       state.isMobileMenuOpen = false;
@@ -2176,6 +2128,12 @@ const bindEvents = () => {
   });
 
   document.querySelectorAll('[data-menu-open]').forEach((button) => {
+    if (button.dataset.bound === 'true') {
+      return;
+    }
+
+    button.dataset.bound = 'true';
+
     button.addEventListener('click', () => {
       state.isMobileMenuOpen = true;
       renderApp();
@@ -2183,6 +2141,12 @@ const bindEvents = () => {
   });
 
   document.querySelectorAll('[data-menu-close]').forEach((button) => {
+    if (button.dataset.bound === 'true') {
+      return;
+    }
+
+    button.dataset.bound = 'true';
+
     button.addEventListener('click', () => {
       state.isMobileMenuOpen = false;
       renderApp();
@@ -2190,6 +2154,12 @@ const bindEvents = () => {
   });
 
   document.querySelectorAll('[data-menu-overlay]').forEach((overlay) => {
+    if (overlay.dataset.bound === 'true') {
+      return;
+    }
+
+    overlay.dataset.bound = 'true';
+
     overlay.addEventListener('click', (event) => {
       if (event.target === overlay) {
         state.isMobileMenuOpen = false;
@@ -2199,6 +2169,12 @@ const bindEvents = () => {
   });
 
   document.querySelectorAll('[data-menu-link]').forEach((link) => {
+    if (link.dataset.bound === 'true') {
+      return;
+    }
+
+    link.dataset.bound = 'true';
+
     link.addEventListener('click', () => {
       state.isMobileMenuOpen = false;
       renderApp();
