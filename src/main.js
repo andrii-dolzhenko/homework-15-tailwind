@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import './style.css';
 
 import { groups, matches, predictionRules, tournamentOptions } from './data/matches.js';
@@ -7,16 +8,84 @@ import iliaAvatar from './assets/icons/ilia.png';
 import yuriiAvatar from './assets/icons/yurii.png';
 
 const app = document.querySelector('#app');
-const decorativePlayersRoot = document.querySelector('#decorative-players-root');
-const headerRoot = document.querySelector('#header-root');
-const mobileMenuRoot = document.querySelector('#mobile-menu-root');
-const mainContentRoot = document.querySelector('#main-content-root');
-const footerRoot = document.querySelector('#footer-root');
-const authModalRoot = document.querySelector('#auth-modal-root');
-const filterModalRoot = document.querySelector('#filter-modal-root');
+
+const decorativePlayers = document.querySelector('#decorative-players');
+const playerLeftGlow = document.querySelector('#player-left-glow');
+const playerRightGlow = document.querySelector('#player-right-glow');
+const playerLeftImage = document.querySelector('#player-left-image');
+const playerRightImage = document.querySelector('#player-right-image');
+
+const siteHeader = document.querySelector('#site-header');
+const headerLogo = document.querySelector('#header-logo');
+const headerNavLinks = document.querySelectorAll('[data-header-nav-link]');
+const themeToggleButton = document.querySelector('#theme-toggle-button');
+const headerLoginButton = document.querySelector('#header-login-button');
+const mobileMenuOpenButton = document.querySelector('#mobile-menu-open-button');
+
+const mobileMenu = document.querySelector('#mobile-menu');
+const mobileMenuPanel = document.querySelector('#mobile-menu-panel');
+const mobileMenuHeader = document.querySelector('#mobile-menu-header');
+const mobileMenuLogo = document.querySelector('#mobile-menu-logo');
+const mobileMenuCloseButton = document.querySelector('#mobile-menu-close-button');
+const mobileAuthActions = document.querySelector('#mobile-auth-actions');
+const mobileLoginButton = document.querySelector('#mobile-login-button');
+const mobileNavLinks = document.querySelectorAll('[data-mobile-nav-link]');
+
+const pageSections = document.querySelectorAll('[data-page]');
+
+const predictionFilters = document.querySelector('#prediction-filters');
+const sportTabsRoot = document.querySelector('#sport-tabs');
+const tournamentToggle = document.querySelector('#tournament-toggle');
+const tournamentArrow = document.querySelector('#tournament-arrow');
+const tournamentList = document.querySelector('#tournament-list');
+const activeTournamentLabel = document.querySelector('#active-tournament-label');
+
+const featuredMatch = document.querySelector('#featured-match');
+
+const upcomingMatchesSection = document.querySelector('#upcoming-matches-section');
+const calendarTitle = document.querySelector('#calendar-title');
+const scheduleDateInput = document.querySelector('#schedule-date-input');
+const upcomingMatchesRoot = document.querySelector('#upcoming-matches-root');
+
+const standingsSection = document.querySelector('#standings-section');
+const standingsGroupLabel = document.querySelector('#standings-group-label');
+const standingsTitle = document.querySelector('#standings-title');
+const standingsRoot = document.querySelector('#standings-root');
+const standingsPagination = document.querySelector('#standings-pagination');
+
+const topPredictorsSection = document.querySelector('#top-predictors-section');
+const topPredictorsTitle = document.querySelector('#top-predictors-title');
+const topPredictorsRoot = document.querySelector('#top-predictors-root');
+
+const calendarPage = document.querySelector('#page-calendar');
+const calendarPageTitle = document.querySelector('#calendar-page-title');
+const activeFiltersRoot = document.querySelector('#active-filters-root');
+const calendarPageRoot = document.querySelector('#calendar-page-root');
+
+const ratingsPage = document.querySelector('#page-ratings');
+const ratingsPageTitle = document.querySelector('#ratings-page-title');
+const ratingsSummary = document.querySelector('#ratings-summary');
+const ratingsRoot = document.querySelector('#ratings-root');
+
+const rulesPage = document.querySelector('#page-rules');
+const rulesPageTitle = document.querySelector('#rules-page-title');
+const rulesRoot = document.querySelector('#rules-root');
+
+const siteFooter = document.querySelector('#site-footer');
 const footerLogo = document.querySelector('#footer-logo');
 const footerDescription = document.querySelector('#footer-description');
 const footerCopyright = document.querySelector('#footer-copyright');
+
+const authModalRoot = document.querySelector('#auth-modal-root');
+const filterModalRoot = document.querySelector('#filter-modal-root');
+
+const mutedTextElements = document.querySelectorAll('[data-muted-text]');
+const decorativePlayersRoot = decorativePlayers;
+const headerRoot = siteHeader;
+const mobileMenuRoot = mobileMenu;
+const mainContentRoot = document.querySelector('#main-layout');
+const footerRoot = siteFooter;
+
 const publicAsset = (path) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
 
 const state = {
