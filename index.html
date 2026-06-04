@@ -5,11 +5,107 @@
     <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MatchForecast — Predict. Analyze. Win.</title>
+    <script>
+      document.documentElement.dataset.theme = localStorage.getItem('theme') || 'dark';
+    </script>
+    <style>
+      html:not(.app-ready),
+      html:not(.app-ready) body {
+        background: #0b1220;
+      }
+
+      html:not(.app-ready) #app {
+        min-height: 100vh;
+        opacity: 0;
+        background: #0b1220;
+      }
+
+      #app {
+        min-height: 100vh;
+      }
+
+      #decorative-players {
+        display: none;
+      }
+
+      html.app-ready #app {
+        opacity: 1;
+      }
+
+      html:not(.app-ready)[data-theme='dark'] #site-header {
+        border-color: rgba(51, 65, 85, 0.8);
+        background: rgba(17, 24, 39, 0.9);
+        color: #f8fafc;
+      }
+
+      html:not(.app-ready)[data-theme='light'] #site-header {
+        border-color: #e2e8f0;
+        background: rgba(255, 255, 255, 0.9);
+        color: #020617;
+      }
+
+      html:not(.app-ready)[data-theme='dark'] [data-header-nav-link] {
+        color: #cbd5e1;
+      }
+
+      html:not(.app-ready)[data-theme='light'] [data-header-nav-link] {
+        color: #64748b;
+      }
+
+      html:not(.app-ready) [data-header-nav-link='rules'],
+      html:not(.app-ready) [data-page-link='rules'] {
+        color: #c4b5fd;
+      }
+
+      html:not(.app-ready)[data-theme='dark'] #theme-toggle-button,
+      html:not(.app-ready)[data-theme='dark'] #header-login-button,
+      html:not(.app-ready)[data-theme='dark'] #mobile-menu-open-button {
+        border-color: #475569;
+        background: #1e293b;
+        color: #ffffff;
+      }
+
+      html:not(.app-ready)[data-theme='light'] #theme-toggle-button,
+      html:not(.app-ready)[data-theme='light'] #header-login-button,
+      html:not(.app-ready)[data-theme='light'] #mobile-menu-open-button {
+        border-color: #e2e8f0;
+        background: #ffffff;
+        color: #0f172a;
+      }
+
+      html:not(.app-ready) [data-modal-open='register'] {
+        background: #7c3aed;
+        color: #ffffff;
+      }
+
+      html:not(.app-ready) #site-footer {
+        border-color: #e2e8f0;
+        background: #ffffff;
+      }
+
+      html:not(.app-ready)[data-theme='dark'] #site-footer {
+        border-color: rgba(51, 65, 85, 0.8);
+        background: #111827;
+      }
+
+      html:not(.app-ready) #site-footer a {
+        color: #c4b5fd;
+      }
+
+      @media (min-width: 1920px) {
+        html.app-ready #decorative-players {
+          display: block;
+        }
+      }
+    </style>
   </head>
 
   <body>
     <!-- App -->
-    <div id="app" class="flex min-h-screen flex-col">
+    <div
+      id="app"
+      class="flex min-h-screen flex-col bg-[#0b1220] text-slate-100 opacity-0 transition-opacity duration-150"
+    >
       <!-- Decorative players for wide screens -->
       <div
         id="decorative-players"
@@ -58,10 +154,12 @@
             class="hidden items-center gap-7 text-sm font-semibold lg:flex"
             aria-label="Main navigation"
           >
-            <a href="#" data-page-link="predictions" data-header-nav-link>Predictions</a>
-            <a href="#" data-page-link="calendar" data-header-nav-link>Calendar</a>
-            <a href="#" data-page-link="ratings" data-header-nav-link>Ratings</a>
-            <a href="#" data-page-link="rules" data-header-nav-link>Rules</a>
+            <a href="#" data-page-link="predictions" data-header-nav-link="predictions"
+              >Predictions</a
+            >
+            <a href="#" data-page-link="calendar" data-header-nav-link="calendar">Calendar</a>
+            <a href="#" data-page-link="ratings" data-header-nav-link="ratings">Ratings</a>
+            <a href="#" data-page-link="rules" data-header-nav-link="rules">Rules</a>
           </nav>
 
           <div class="flex items-center gap-2">
@@ -117,6 +215,8 @@
       <div
         id="mobile-menu"
         class="hidden fixed inset-0 z-[90] bg-slate-950/70 backdrop-blur-md lg:hidden"
+        data-menu-overlay
+        role="presentation"
       >
         <aside
           id="mobile-menu-panel"
