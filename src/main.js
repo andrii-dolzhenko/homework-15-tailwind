@@ -323,17 +323,36 @@ const renderPlayerAvatar = (player, size = 'sm') => {
 
   if (player.avatar) {
     return `
-      <img
-        src="${player.avatar}"
-        alt="${player.name} avatar"
-        class="${sizeClass} rounded-full object-cover ring-2 ring-violet-500/20"
-      >
+      <span class="${sizeClass} inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-violet-500/15 ring-2 ring-violet-500/20 [backface-visibility:hidden] [transform:translateZ(0)]">
+        <img
+          src="${player.avatar}"
+          alt="${player.name} avatar"
+          class="h-full w-full rounded-full object-cover"
+        >
+      </span>
     `;
   }
 
   return `
-    <span class="${sizeClass} inline-flex items-center justify-center rounded-full bg-violet-500/15 text-xs font-black text-violet-400 ring-2 ring-violet-500/20">
+    <span class="${sizeClass} inline-flex shrink-0 items-center justify-center rounded-full bg-violet-500/15 text-xs font-black text-violet-400 ring-2 ring-violet-500/20 [backface-visibility:hidden] [transform:translateZ(0)]">
       ${player.initials}
+    </span>
+  `;
+};
+
+const renderTeamFlag = (src, alt, size = 'sm') => {
+  const sizeClass =
+    size === 'lg' ? 'h-14 w-14 min-[540px]:h-16 min-[540px]:w-16 md:h-20 md:w-20' : 'h-7 w-7';
+
+  const ringClass = size === 'lg' ? 'ring-4 ring-white/15' : '';
+
+  return `
+    <span class="${sizeClass} inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-violet-500/10 ${ringClass} [backface-visibility:hidden] [transform:translateZ(0)]">
+      <img
+        src="${src}"
+        alt="${alt}"
+        class="h-full w-full rounded-full object-cover"
+      >
     </span>
   `;
 };
@@ -823,9 +842,9 @@ const renderFeaturedMatch = (theme) => {
 
   return `
     <section
-      class="relative overflow-hidden rounded-3xl border border-violet-500/30 shadow-2xl shadow-violet-950/20"
-      aria-labelledby="featured-match-title"
-    >
+  class="relative mt-5 overflow-hidden rounded-3xl border border-violet-500/30 shadow-2xl shadow-violet-950/20 sm:mt-6"
+  aria-labelledby="featured-match-title"
+>
       <img src="${theme.stadium}" alt="" class="absolute inset-0 h-full w-full object-cover">
 
       <div class="absolute inset-0 ${theme.isDark ? 'bg-slate-950/55' : 'bg-white/70'}"></div>
@@ -834,11 +853,9 @@ const renderFeaturedMatch = (theme) => {
       <div class="relative grid gap-5 p-4 min-[540px]:p-6 md:grid-cols-[1fr_auto_1fr] md:gap-8 lg:p-10">
         <div class="grid grid-cols-2 gap-3 md:contents">
           <div class="flex min-w-0 flex-col items-center text-center">
-            <img
-              src="${match.homeFlag}"
-              alt="${match.home} flag"
-              class="mb-3 h-14 w-14 rounded-full object-cover ring-4 ring-white/15 min-[540px]:h-16 min-[540px]:w-16 md:h-20 md:w-20"
-            >
+            <div class="mb-3">
+  ${renderTeamFlag(match.homeFlag, `${match.home} flag`, 'lg')}
+</div>
 
             <h1 id="featured-match-title" class="max-w-full truncate text-2xl font-bold ${theme.strongText} min-[540px]:text-3xl md:text-2xl">
               ${match.home}
@@ -850,11 +867,9 @@ const renderFeaturedMatch = (theme) => {
           </div>
 
           <div class="flex min-w-0 flex-col items-center text-center md:order-3">
-            <img
-              src="${match.awayFlag}"
-              alt="${match.away} flag"
-              class="mb-3 h-14 w-14 rounded-full object-cover ring-4 ring-white/15 min-[540px]:h-16 min-[540px]:w-16 md:h-20 md:w-20"
-            >
+            <div class="mb-3">
+  ${renderTeamFlag(match.awayFlag, `${match.away} flag`, 'lg')}
+</div>
 
             <h2 class="max-w-full truncate text-2xl font-bold ${theme.strongText} min-[540px]:text-3xl md:text-2xl">
               ${match.away}
@@ -916,7 +931,7 @@ const renderUpcomingMatches = (theme) => {
   const upcomingMatches = getVisibleScheduleMatches();
 
   return `
-    <section class="rounded-3xl border p-5 ${theme.card}" aria-labelledby="calendar-title">
+    <section class="mt-5 rounded-3xl border p-5 ${theme.card} sm:mt-6" aria-labelledby="calendar-title">
       <div class="mb-5 grid gap-4 xl:grid-cols-[1fr_auto] xl:items-center">
         <div>
           <p class="text-sm font-semibold uppercase tracking-widest text-violet-400">
@@ -970,11 +985,7 @@ const renderUpcomingMatches = (theme) => {
                         <div class="min-w-0">
                           <div class="grid gap-2">
                             <span class="grid grid-cols-[28px_minmax(0,1fr)] items-center gap-2 font-bold ${theme.strongText}">
-                              <img
-                                src="${match.homeFlag}"
-                                alt="${match.home} flag"
-                                class="h-7 w-7 rounded-full object-cover"
-                              >
+                              ${renderTeamFlag(match.homeFlag, `${match.home} flag`)}
 
                               <span class="min-w-0 break-words">
                                 ${match.home}
@@ -986,11 +997,7 @@ const renderUpcomingMatches = (theme) => {
                             </span>
 
                             <span class="grid grid-cols-[28px_minmax(0,1fr)] items-center gap-2 font-bold ${theme.strongText}">
-                              <img
-                                src="${match.awayFlag}"
-                                alt="${match.away} flag"
-                                class="h-7 w-7 rounded-full object-cover"
-                              >
+                              ${renderTeamFlag(match.awayFlag, `${match.away} flag`)}
 
                               <span class="min-w-0 break-words">
                                 ${match.away}
@@ -2118,24 +2125,175 @@ const applyFilters = () => {
   state.openCalendarGroups = filteredGroups.length > 0 ? [filteredGroups[0].group] : [];
 };
 
+const updateDecorativePlayers = (theme) => {
+  playerLeftGlow.className = `fixed left-0 top-0 z-0 h-full w-[400px] ${theme.playerGlowLeft}`;
+  playerRightGlow.className = `fixed right-0 top-0 z-0 h-full w-[400px] ${theme.playerGlowRight}`;
+
+  playerLeftImage.src = publicAsset('player-right-blue.webp');
+  playerLeftImage.className = `fixed left-8 top-24 z-10 h-[calc(100vh-8rem)] max-h-[800px] object-contain object-left-bottom ${theme.playerImageFx} ${theme.playerOpacity}`;
+
+  playerRightImage.src = publicAsset('player-left-yellow.webp');
+  playerRightImage.className = `fixed right-8 top-24 z-10 h-[calc(100vh-8rem)] max-h-[800px] object-contain object-right-bottom ${theme.playerImageFx} ${theme.playerOpacity}`;
+};
+
+const updateHeader = (theme) => {
+  siteHeader.className = `sticky top-0 z-50 border-b backdrop-blur-xl ${theme.header}`;
+  headerLogo.src = theme.logo;
+
+  headerNavLinks.forEach((link) => {
+    const isActive = state.activePage === link.dataset.pageLink;
+
+    link.className = isActive
+      ? 'text-violet-300'
+      : `${theme.mutedText} transition hover:text-violet-300`;
+  });
+
+  themeToggleButton.className = `inline-flex min-h-10 min-w-10 items-center justify-center rounded-xl border text-sm font-semibold sm:min-h-11 sm:min-w-11 ${
+    theme.isDark
+      ? 'border-slate-600 bg-slate-800 text-white'
+      : 'border-slate-200 bg-white text-slate-900'
+  } hover:border-violet-400 focus-visible:outline-2 focus-visible:outline-violet-400`;
+
+  themeToggleButton.textContent = theme.isDark ? '☾' : '☀';
+  themeToggleButton.setAttribute(
+    'aria-label',
+    `Switch to ${theme.isDark ? 'light' : 'dark'} theme`
+  );
+
+  headerLoginButton.className = `hidden min-h-11 items-center justify-center rounded-xl border px-5 text-sm font-bold sm:inline-flex ${
+    theme.isDark ? 'border-slate-600 text-white' : 'border-slate-200 text-slate-950'
+  } hover:border-violet-400 focus-visible:outline-2 focus-visible:outline-violet-400`;
+
+  mobileMenuOpenButton.className = `inline-flex min-h-10 min-w-10 items-center justify-center rounded-xl border lg:hidden ${
+    theme.isDark
+      ? 'border-slate-600 bg-slate-800 text-white'
+      : 'border-slate-200 bg-white text-slate-900'
+  } hover:border-violet-400 focus-visible:outline-2 focus-visible:outline-violet-400`;
+
+  mobileMenuOpenButton.setAttribute('aria-expanded', String(state.isMobileMenuOpen));
+};
+
+const updateMobileMenu = (theme) => {
+  mobileMenu.className = state.isMobileMenuOpen
+    ? 'fixed inset-0 z-[90] bg-slate-950/70 backdrop-blur-md lg:hidden'
+    : 'hidden fixed inset-0 z-[90] bg-slate-950/70 backdrop-blur-md lg:hidden';
+
+  mobileMenuPanel.className = `ml-auto flex h-full w-full max-w-sm flex-col border-l shadow-2xl ${
+    theme.isDark ? 'border-slate-700 bg-[#111827]' : 'border-slate-200 bg-white'
+  }`;
+
+  mobileMenuHeader.className = `flex items-center justify-between gap-4 border-b px-5 py-4 ${
+    theme.isDark ? 'border-slate-700' : 'border-slate-200'
+  }`;
+
+  mobileMenuLogo.src = theme.logo;
+
+  mobileMenuCloseButton.className = `inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border transition ${
+    theme.isDark
+      ? 'border-slate-600 text-white hover:border-violet-400'
+      : 'border-slate-200 text-slate-700 hover:border-violet-400'
+  } focus-visible:outline-2 focus-visible:outline-violet-400`;
+
+  mobileAuthActions.className = `mt-6 grid gap-3 border-t pt-5 ${
+    theme.isDark ? 'border-slate-700' : 'border-slate-200'
+  }`;
+
+  mobileLoginButton.className = `inline-flex min-h-12 items-center justify-center rounded-2xl border px-5 text-sm font-bold transition ${
+    theme.isDark
+      ? 'border-slate-600 text-white hover:border-violet-400'
+      : 'border-slate-200 text-slate-950 hover:border-violet-400'
+  } focus-visible:outline-2 focus-visible:outline-violet-400`;
+
+  mobileNavLinks.forEach((link) => {
+    const page = link.dataset.mobileNavLink;
+    const isActive = state.activePage === page;
+    const [icon, content] = link.children;
+    const [title, subtitle] = content.children;
+
+    link.className = `group flex items-center gap-4 rounded-2xl border p-4 transition ${
+      theme.isDark
+        ? 'border-slate-700 bg-slate-900/70 hover:border-violet-500/60 hover:bg-violet-500/10'
+        : 'border-slate-200 bg-slate-50 hover:border-violet-300 hover:bg-violet-50'
+    }`;
+
+    icon.className =
+      'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-500/15 text-lg text-violet-300';
+
+    title.className = `block font-bold ${isActive ? 'text-violet-300' : theme.strongText}`;
+    subtitle.className = `mt-1 block text-sm ${theme.mutedText}`;
+  });
+};
+
+const syncSectionFromMarkup = (targetElement, markup) => {
+  const template = document.createElement('template');
+
+  template.innerHTML = markup.trim();
+
+  const nextElement = template.content.firstElementChild;
+
+  if (!targetElement || !nextElement) {
+    return;
+  }
+
+  targetElement.className = nextElement.className;
+  targetElement.innerHTML = nextElement.innerHTML;
+};
+
+const togglePages = () => {
+  pageSections.forEach((section) => {
+    const isActive = section.dataset.page === state.activePage;
+
+    section.classList.toggle('hidden', !isActive);
+  });
+};
+
+const renderPredictionsContent = (theme) => {
+  syncSectionFromMarkup(predictionFilters, renderFilters(theme));
+  syncSectionFromMarkup(featuredMatch, renderFeaturedMatch(theme));
+  syncSectionFromMarkup(upcomingMatchesSection, renderUpcomingMatches(theme));
+  syncSectionFromMarkup(standingsSection, renderStandings(theme));
+  syncSectionFromMarkup(topPredictorsSection, renderTopPredictors(theme));
+};
+
+const renderPageContent = (theme) => {
+  renderPredictionsContent(theme);
+  syncSectionFromMarkup(calendarPage, renderCalendarPage(theme));
+  syncSectionFromMarkup(ratingsPage, renderRatingsPage(theme));
+  syncSectionFromMarkup(rulesPage, renderRulesPage(theme));
+
+  togglePages();
+};
+
 const renderApp = () => {
   const theme = getTheme();
 
+  document.documentElement.dataset.theme = state.theme;
+  document.body.className = theme.isDark ? 'bg-[#0b1220]' : 'bg-slate-50';
+
   app.className = `flex min-h-screen flex-col ${theme.page}`;
 
-  decorativePlayersRoot.innerHTML = renderDecorativePlayers(theme);
-  headerRoot.innerHTML = renderHeader(theme);
-  mobileMenuRoot.innerHTML = renderMobileMenu(theme);
-  mainContentRoot.innerHTML = renderMainContent(theme);
+  updateDecorativePlayers(theme);
+  updateHeader(theme);
+  updateMobileMenu(theme);
   updateFooter(theme);
+  renderPageContent(theme);
+
   authModalRoot.innerHTML = renderAuthModal(theme);
   filterModalRoot.innerHTML = renderFilterModal(theme);
 
   bindEvents();
+
+  document.documentElement.classList.add('app-ready');
 };
 
 const bindEvents = () => {
   document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
+    if (button.dataset.bound === 'true') {
+      return;
+    }
+
+    button.dataset.bound = 'true';
+
     button.addEventListener('click', () => {
       state.theme = state.theme === 'dark' ? 'light' : 'dark';
       localStorage.setItem('theme', state.theme);
@@ -2190,6 +2348,12 @@ const bindEvents = () => {
   });
 
   document.querySelectorAll('[data-modal-open]').forEach((button) => {
+    if (button.dataset.bound === 'true') {
+      return;
+    }
+
+    button.dataset.bound = 'true';
+
     button.addEventListener('click', () => {
       state.activeModal = button.dataset.modalOpen;
       state.isMobileMenuOpen = false;
@@ -2219,6 +2383,12 @@ const bindEvents = () => {
   });
 
   document.querySelectorAll('[data-menu-open]').forEach((button) => {
+    if (button.dataset.bound === 'true') {
+      return;
+    }
+
+    button.dataset.bound = 'true';
+
     button.addEventListener('click', () => {
       state.isMobileMenuOpen = true;
       renderApp();
@@ -2226,6 +2396,12 @@ const bindEvents = () => {
   });
 
   document.querySelectorAll('[data-menu-close]').forEach((button) => {
+    if (button.dataset.bound === 'true') {
+      return;
+    }
+
+    button.dataset.bound = 'true';
+
     button.addEventListener('click', () => {
       state.isMobileMenuOpen = false;
       renderApp();
@@ -2233,6 +2409,12 @@ const bindEvents = () => {
   });
 
   document.querySelectorAll('[data-menu-overlay]').forEach((overlay) => {
+    if (overlay.dataset.bound === 'true') {
+      return;
+    }
+
+    overlay.dataset.bound = 'true';
+
     overlay.addEventListener('click', (event) => {
       if (event.target === overlay) {
         state.isMobileMenuOpen = false;
@@ -2242,6 +2424,12 @@ const bindEvents = () => {
   });
 
   document.querySelectorAll('[data-menu-link]').forEach((link) => {
+    if (link.dataset.bound === 'true') {
+      return;
+    }
+
+    link.dataset.bound = 'true';
+
     link.addEventListener('click', () => {
       state.isMobileMenuOpen = false;
       renderApp();
