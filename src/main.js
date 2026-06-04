@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import './style.css';
 
 import { groups, matches, predictionRules, tournamentOptions } from './data/matches.js';
@@ -9,7 +8,6 @@ import yuriiAvatar from './assets/icons/yurii.png';
 
 const app = document.querySelector('#app');
 
-const decorativePlayers = document.querySelector('#decorative-players');
 const playerLeftGlow = document.querySelector('#player-left-glow');
 const playerRightGlow = document.querySelector('#player-right-glow');
 const playerLeftImage = document.querySelector('#player-left-image');
@@ -30,46 +28,19 @@ const mobileMenuCloseButton = document.querySelector('#mobile-menu-close-button'
 const mobileAuthActions = document.querySelector('#mobile-auth-actions');
 const mobileLoginButton = document.querySelector('#mobile-login-button');
 const mobileNavLinks = document.querySelectorAll('[data-mobile-nav-link]');
-
 const pageSections = document.querySelectorAll('[data-page]');
-
 const predictionFilters = document.querySelector('#prediction-filters');
-const sportTabsRoot = document.querySelector('#sport-tabs');
-const tournamentToggle = document.querySelector('#tournament-toggle');
-const tournamentArrow = document.querySelector('#tournament-arrow');
-const tournamentList = document.querySelector('#tournament-list');
-const activeTournamentLabel = document.querySelector('#active-tournament-label');
-
 const featuredMatch = document.querySelector('#featured-match');
-
 const upcomingMatchesSection = document.querySelector('#upcoming-matches-section');
-const calendarTitle = document.querySelector('#calendar-title');
-const scheduleDateInput = document.querySelector('#schedule-date-input');
-const upcomingMatchesRoot = document.querySelector('#upcoming-matches-root');
-
 const standingsSection = document.querySelector('#standings-section');
-const standingsGroupLabel = document.querySelector('#standings-group-label');
-const standingsTitle = document.querySelector('#standings-title');
-const standingsRoot = document.querySelector('#standings-root');
-const standingsPagination = document.querySelector('#standings-pagination');
 
 const topPredictorsSection = document.querySelector('#top-predictors-section');
-const topPredictorsTitle = document.querySelector('#top-predictors-title');
-const topPredictorsRoot = document.querySelector('#top-predictors-root');
 
 const calendarPage = document.querySelector('#page-calendar');
-const calendarPageTitle = document.querySelector('#calendar-page-title');
-const activeFiltersRoot = document.querySelector('#active-filters-root');
-const calendarPageRoot = document.querySelector('#calendar-page-root');
 
 const ratingsPage = document.querySelector('#page-ratings');
-const ratingsPageTitle = document.querySelector('#ratings-page-title');
-const ratingsSummary = document.querySelector('#ratings-summary');
-const ratingsRoot = document.querySelector('#ratings-root');
 
 const rulesPage = document.querySelector('#page-rules');
-const rulesPageTitle = document.querySelector('#rules-page-title');
-const rulesRoot = document.querySelector('#rules-root');
 
 const siteFooter = document.querySelector('#site-footer');
 const footerLogo = document.querySelector('#footer-logo');
@@ -79,11 +50,6 @@ const footerCopyright = document.querySelector('#footer-copyright');
 const authModalRoot = document.querySelector('#auth-modal-root');
 const filterModalRoot = document.querySelector('#filter-modal-root');
 
-const mutedTextElements = document.querySelectorAll('[data-muted-text]');
-const decorativePlayersRoot = decorativePlayers;
-const headerRoot = siteHeader;
-const mobileMenuRoot = mobileMenu;
-const mainContentRoot = document.querySelector('#main-layout');
 const footerRoot = siteFooter;
 
 const publicAsset = (path) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
@@ -110,13 +76,6 @@ const state = {
     status: 'All matches'
   }
 };
-
-const navigationLinks = [
-  { label: 'Predictions', page: 'predictions' },
-  { label: 'Calendar', page: 'calendar' },
-  { label: 'Ratings', page: 'ratings' },
-  { label: 'Rules', page: 'rules' }
-];
 
 const sportTabs = [
   { name: 'Football', icon: '⚽', active: true },
@@ -354,189 +313,6 @@ const renderTeamFlag = (src, alt, size = 'sm') => {
         class="h-full w-full rounded-full object-cover"
       >
     </span>
-  `;
-};
-
-const renderDecorativePlayers = (theme) => `
-  <div aria-hidden="true" class="pointer-events-none fixed inset-y-0 left-0 right-0 z-0 hidden overflow-hidden min-[1920px]:block">
-    <div class="fixed left-0 top-0 z-0 h-full w-[400px] ${theme.playerGlowLeft}"></div>
-
-    <img
-      src="${publicAsset('player-right-blue.webp')}"
-      alt=""
-      class="fixed left-8 top-24 z-10 h-[calc(100vh-8rem)] max-h-[800px] object-contain object-left-bottom ${theme.playerImageFx} ${theme.playerOpacity}"
-    >
-
-    <div class="fixed right-0 top-0 z-0 h-full w-[400px] ${theme.playerGlowRight}"></div>
-
-    <img
-      src="${publicAsset('player-left-yellow.webp')}"
-      alt=""
-      class="fixed right-8 top-24 z-10 h-[calc(100vh-8rem)] max-h-[800px] object-contain object-right-bottom ${theme.playerImageFx} ${theme.playerOpacity}"
-    >
-  </div>
-`;
-
-const renderNavLinks = (theme, isMobile = false) =>
-  navigationLinks
-    .map((link) => {
-      const isActive = state.activePage === link.page;
-      const baseClass = isMobile
-        ? `group flex items-center gap-4 rounded-2xl border p-4 transition ${
-            theme.isDark
-              ? 'border-slate-700 bg-slate-900/70 hover:border-violet-500/60 hover:bg-violet-500/10'
-              : 'border-slate-200 bg-slate-50 hover:border-violet-300 hover:bg-violet-50'
-          }`
-        : isActive
-          ? 'text-violet-300'
-          : `${theme.mutedText} transition hover:text-violet-300`;
-
-      if (isMobile) {
-        const subtitles = {
-          predictions: 'Create and manage score forecasts',
-          calendar: 'Browse matches by group',
-          ratings: 'Compare user prediction scores',
-          rules: 'Learn how points are calculated'
-        };
-
-        const icons = {
-          predictions: '↗',
-          calendar: '📅',
-          ratings: '🏆',
-          rules: '☑'
-        };
-
-        return `
-          <li>
-            <a class="${baseClass}" href="#" data-page-link="${link.page}" data-menu-link>
-              <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-500/15 text-lg text-violet-300">
-                ${icons[link.page]}
-              </span>
-
-              <span>
-                <span class="block font-bold ${isActive ? 'text-violet-300' : theme.strongText}">
-                  ${link.label}
-                </span>
-
-                <span class="mt-1 block text-sm ${theme.mutedText}">
-                  ${subtitles[link.page]}
-                </span>
-              </span>
-            </a>
-          </li>
-        `;
-      }
-
-      return `
-        <a class="${baseClass}" href="#" data-page-link="${link.page}">
-          ${link.label}
-        </a>
-      `;
-    })
-    .join('');
-
-const renderHeader = (theme) => `
-  <header class="sticky top-0 z-50 border-b backdrop-blur-xl ${theme.header}">
-    <div class="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
-      <a
-        class="inline-flex max-w-[160px] items-center focus-visible:outline-2 focus-visible:outline-violet-400 sm:max-w-none"
-        href="#"
-        data-page-link="predictions"
-        aria-label="MatchForecast home"
-      >
-        <img src="${theme.logo}" alt="MatchForecast logo" class="h-11 w-auto sm:h-12 lg:h-14">
-      </a>
-
-      <nav class="hidden items-center gap-7 text-sm font-semibold lg:flex" aria-label="Main navigation">
-        ${renderNavLinks(theme)}
-      </nav>
-
-      <div class="flex items-center gap-2">
-        <button
-          class="inline-flex min-h-10 min-w-10 items-center justify-center rounded-xl border text-sm font-semibold transition sm:min-h-11 sm:min-w-11 ${theme.isDark ? 'border-slate-600 bg-slate-800 text-white' : 'border-slate-200 bg-white text-slate-900'} hover:border-violet-400 focus-visible:outline-2 focus-visible:outline-violet-400"
-          type="button"
-          data-theme-toggle
-          aria-label="Switch to ${theme.isDark ? 'light' : 'dark'} theme"
-        >
-          ${theme.isDark ? '☾' : '☀'}
-        </button>
-
-        <button
-          class="hidden min-h-11 items-center justify-center rounded-xl border px-5 text-sm font-bold transition sm:inline-flex ${theme.isDark ? 'border-slate-600 text-white' : 'border-slate-200 text-slate-950'} hover:border-violet-400 focus-visible:outline-2 focus-visible:outline-violet-400"
-          type="button"
-          data-modal-open="login"
-        >
-          Login
-        </button>
-
-        <button
-          class="hidden min-h-11 items-center justify-center rounded-xl bg-violet-600 px-5 text-sm font-bold text-white transition hover:bg-violet-500 focus-visible:outline-2 focus-visible:outline-violet-300 sm:inline-flex"
-          type="button"
-          data-modal-open="register"
-        >
-          Register
-        </button>
-
-        <button
-          class="inline-flex min-h-10 min-w-10 items-center justify-center rounded-xl border transition lg:hidden ${theme.isDark ? 'border-slate-600 bg-slate-800 text-white' : 'border-slate-200 bg-white text-slate-900'} hover:border-violet-400 focus-visible:outline-2 focus-visible:outline-violet-400"
-          type="button"
-          data-menu-open
-          aria-label="Open menu"
-          aria-expanded="${state.isMobileMenuOpen}"
-        >
-          ${renderIcon('menu')}
-        </button>
-      </div>
-    </div>
-  </header>
-`;
-
-const renderMobileMenu = (theme) => {
-  if (!state.isMobileMenuOpen) {
-    return '';
-  }
-
-  return `
-    <div class="fixed inset-0 z-[90] bg-slate-950/70 backdrop-blur-md lg:hidden" data-menu-overlay role="presentation">
-      <aside class="ml-auto flex h-full w-full max-w-sm flex-col border-l shadow-2xl ${theme.isDark ? 'border-slate-700 bg-[#111827]' : 'border-slate-200 bg-white'}" role="dialog" aria-modal="true" aria-label="Mobile navigation">
-        <div class="flex items-center justify-between gap-4 border-b px-5 py-4 ${theme.isDark ? 'border-slate-700' : 'border-slate-200'}">
-          <img src="${theme.logo}" alt="MatchForecast logo" class="h-11 w-auto">
-
-          <button
-            class="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border transition ${theme.isDark ? 'border-slate-600 text-white hover:border-violet-400' : 'border-slate-200 text-slate-700 hover:border-violet-400'} focus-visible:outline-2 focus-visible:outline-violet-400"
-            type="button"
-            data-menu-close
-            aria-label="Close menu"
-          >
-            ${renderIcon('close')}
-          </button>
-        </div>
-
-        <nav class="flex-1 overflow-y-auto px-5 py-5" aria-label="Mobile navigation links">
-          <ul class="grid gap-3">
-            ${renderNavLinks(theme, true)}
-          </ul>
-
-          <div class="mt-6 grid gap-3 border-t pt-5 ${theme.isDark ? 'border-slate-700' : 'border-slate-200'}">
-            <button
-              class="inline-flex min-h-12 items-center justify-center rounded-2xl border px-5 text-sm font-bold transition ${theme.isDark ? 'border-slate-600 text-white hover:border-violet-400' : 'border-slate-200 text-slate-950 hover:border-violet-400'} focus-visible:outline-2 focus-visible:outline-violet-400"
-              type="button"
-              data-modal-open="login"
-            >
-              Login
-            </button>
-
-            <button
-              class="inline-flex min-h-12 items-center justify-center rounded-2xl bg-gradient-to-r from-violet-600 to-blue-600 px-5 text-sm font-bold text-white shadow-lg shadow-violet-950/25 transition hover:-translate-y-0.5 hover:from-violet-500 hover:to-blue-500 focus-visible:outline-2 focus-visible:outline-violet-300"
-              type="button"
-              data-modal-open="register"
-            >
-              Register
-            </button>
-          </div>
-        </nav>
-      </aside>
-    </div>
   `;
 };
 
@@ -2061,37 +1837,6 @@ const updateFooter = (theme) => {
   footerCopyright.className = `border-t ${
     theme.isDark ? 'border-slate-700' : 'border-slate-200'
   } px-4 py-5 text-center text-sm ${theme.mutedText}`;
-};
-
-const renderMainContent = (theme) => {
-  if (state.activePage === 'calendar') {
-    return renderCalendarPage(theme);
-  }
-
-  if (state.activePage === 'ratings') {
-    return renderRatingsPage(theme);
-  }
-
-  if (state.activePage === 'rules') {
-    return renderRulesPage(theme);
-  }
-
-  return `
-    ${renderFilters(theme)}
-
-    <div class="mt-5 sm:mt-6">
-      ${renderFeaturedMatch(theme)}
-    </div>
-
-    <div class="mt-5 grid gap-5 sm:mt-6 sm:gap-6">
-      ${renderUpcomingMatches(theme)}
-
-      <div class="grid items-stretch gap-5 sm:gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
-        ${renderStandings(theme)}
-        ${renderTopPredictors(theme)}
-      </div>
-    </div>
-  `;
 };
 
 const closeAuthModal = () => {
