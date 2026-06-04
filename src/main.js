@@ -14,6 +14,9 @@ const mainContentRoot = document.querySelector('#main-content-root');
 const footerRoot = document.querySelector('#footer-root');
 const authModalRoot = document.querySelector('#auth-modal-root');
 const filterModalRoot = document.querySelector('#filter-modal-root');
+const footerLogo = document.querySelector('#footer-logo');
+const footerDescription = document.querySelector('#footer-description');
+const footerCopyright = document.querySelector('#footer-copyright');
 const publicAsset = (path) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
 
 const state = {
@@ -1973,52 +1976,16 @@ const renderFilterModal = (theme) => {
   `;
 };
 
-const renderFooter = (theme) => `
-  <footer class="relative z-10 mt-8 border-t ${theme.footer}">
-    <div class="mx-auto grid w-full max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[minmax(0,420px)_minmax(0,1fr)] lg:items-start lg:px-8 min-[1920px]:max-w-6xl">
-      <div class="min-w-0">
-        <img src="${theme.logo}" alt="MatchForecast logo" class="h-14 w-auto">
+const updateFooter = (theme) => {
+  footerRoot.className = `relative z-10 mt-8 border-t ${theme.footer}`;
+  footerLogo.src = theme.logo;
 
-        <p class="mt-3 max-w-md text-sm ${theme.mutedText}">
-          MatchForecast helps fans make score predictions, track match results and compare their insights.
-        </p>
-      </div>
+  footerDescription.className = `mt-3 max-w-md text-sm ${theme.mutedText}`;
 
-      <nav class="min-w-0 lg:justify-self-end" aria-label="Footer navigation">
-        <ul class="flex max-w-[560px] flex-wrap gap-x-5 gap-y-3 text-sm font-semibold text-violet-300 lg:justify-end">
-          ${navigationLinks
-            .map(
-              (link) => `
-                <li>
-                  <a
-                    class="inline-flex transition hover:text-violet-200 focus-visible:outline-2 focus-visible:outline-violet-400"
-                    href="#"
-                    data-page-link="${link.page}"
-                  >
-                    ${link.label}
-                  </a>
-                </li>
-              `
-            )
-            .join('')}
-
-          <li>
-            <a
-              class="inline-flex transition hover:text-violet-200 focus-visible:outline-2 focus-visible:outline-violet-400"
-              href="#"
-            >
-              Help Center
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </div>
-
-    <div class="border-t ${theme.isDark ? 'border-slate-700' : 'border-slate-200'} px-4 py-5 text-center text-sm ${theme.mutedText}">
-      © 2026. Andrii Dolzhenko. All Rights Reserved.
-    </div>
-  </footer>
-`;
+  footerCopyright.className = `border-t ${
+    theme.isDark ? 'border-slate-700' : 'border-slate-200'
+  } px-4 py-5 text-center text-sm ${theme.mutedText}`;
+};
 
 const renderMainContent = (theme) => {
   if (state.activePage === 'calendar') {
@@ -2091,7 +2058,7 @@ const renderApp = () => {
   headerRoot.innerHTML = renderHeader(theme);
   mobileMenuRoot.innerHTML = renderMobileMenu(theme);
   mainContentRoot.innerHTML = renderMainContent(theme);
-  footerRoot.innerHTML = renderFooter(theme);
+  updateFooter(theme);
   authModalRoot.innerHTML = renderAuthModal(theme);
   filterModalRoot.innerHTML = renderFilterModal(theme);
 
@@ -2122,6 +2089,12 @@ const bindEvents = () => {
   });
 
   document.querySelectorAll('[data-page-link]').forEach((link) => {
+    if (link.dataset.bound === 'true') {
+      return;
+    }
+
+    link.dataset.bound = 'true';
+
     link.addEventListener('click', (event) => {
       event.preventDefault();
 

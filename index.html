@@ -29,7 +29,79 @@
       </main>
 
       <!-- Footer -->
-      <div id="footer-root"></div>
+      <footer id="footer-root" class="relative z-10 mt-8 border-t">
+        <div
+          class="mx-auto grid w-full max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[minmax(0,420px)_minmax(0,1fr)] lg:items-start lg:px-8 min-[1920px]:max-w-6xl"
+        >
+          <div class="min-w-0">
+            <img id="footer-logo" src="/logo.png" alt="MatchForecast logo" class="h-14 w-auto" />
+
+            <p id="footer-description" class="mt-3 max-w-md text-sm">
+              MatchForecast helps fans make score predictions, track match results and compare their
+              insights.
+            </p>
+          </div>
+
+          <nav class="min-w-0 lg:justify-self-end" aria-label="Footer navigation">
+            <ul
+              class="flex max-w-[560px] flex-wrap gap-x-5 gap-y-3 text-sm font-semibold text-violet-300 lg:justify-end"
+            >
+              <li>
+                <a
+                  class="inline-flex transition hover:text-violet-200 focus-visible:outline-2 focus-visible:outline-violet-400"
+                  href="#"
+                  data-page-link="predictions"
+                >
+                  Predictions
+                </a>
+              </li>
+
+              <li>
+                <a
+                  class="inline-flex transition hover:text-violet-200 focus-visible:outline-2 focus-visible:outline-violet-400"
+                  href="#"
+                  data-page-link="calendar"
+                >
+                  Calendar
+                </a>
+              </li>
+
+              <li>
+                <a
+                  class="inline-flex transition hover:text-violet-200 focus-visible:outline-2 focus-visible:outline-violet-400"
+                  href="#"
+                  data-page-link="ratings"
+                >
+                  Ratings
+                </a>
+              </li>
+
+              <li>
+                <a
+                  class="inline-flex transition hover:text-violet-200 focus-visible:outline-2 focus-visible:outline-violet-400"
+                  href="#"
+                  data-page-link="rules"
+                >
+                  Rules
+                </a>
+              </li>
+
+              <li>
+                <a
+                  class="inline-flex transition hover:text-violet-200 focus-visible:outline-2 focus-visible:outline-violet-400"
+                  href="#"
+                >
+                  Help Center
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+        <div id="footer-copyright" class="border-t px-4 py-5 text-center text-sm">
+          © 2026. Andrii Dolzhenko. All Rights Reserved.
+        </div>
+      </footer>
 
       <!-- Authentication modal -->
       <div id="auth-modal-root"></div>
