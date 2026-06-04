@@ -7,6 +7,13 @@ import iliaAvatar from './assets/icons/ilia.png';
 import yuriiAvatar from './assets/icons/yurii.png';
 
 const app = document.querySelector('#app');
+const decorativePlayersRoot = document.querySelector('#decorative-players-root');
+const headerRoot = document.querySelector('#header-root');
+const mobileMenuRoot = document.querySelector('#mobile-menu-root');
+const mainContentRoot = document.querySelector('#main-content-root');
+const footerRoot = document.querySelector('#footer-root');
+const authModalRoot = document.querySelector('#auth-modal-root');
+const filterModalRoot = document.querySelector('#filter-modal-root');
 const publicAsset = (path) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
 
 const state = {
@@ -2078,21 +2085,15 @@ const applyFilters = () => {
 const renderApp = () => {
   const theme = getTheme();
 
-  app.innerHTML = `
-    <div class="flex min-h-screen flex-col ${theme.page}">
-      ${renderDecorativePlayers(theme)}
-      ${renderHeader(theme)}
-      ${renderMobileMenu(theme)}
+  app.className = `flex min-h-screen flex-col ${theme.page}`;
 
-      <main class="relative z-10 mx-auto w-full max-w-7xl flex-1 px-4 py-5 sm:px-6 sm:py-6 lg:px-8 min-[1920px]:max-w-6xl">
-        ${renderMainContent(theme)}
-      </main>
-
-      ${renderFooter(theme)}
-      ${renderAuthModal(theme)}
-      ${renderFilterModal(theme)}
-    </div>
-  `;
+  decorativePlayersRoot.innerHTML = renderDecorativePlayers(theme);
+  headerRoot.innerHTML = renderHeader(theme);
+  mobileMenuRoot.innerHTML = renderMobileMenu(theme);
+  mainContentRoot.innerHTML = renderMainContent(theme);
+  footerRoot.innerHTML = renderFooter(theme);
+  authModalRoot.innerHTML = renderAuthModal(theme);
+  filterModalRoot.innerHTML = renderFilterModal(theme);
 
   bindEvents();
 };
